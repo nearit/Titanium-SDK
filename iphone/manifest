@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 0.0.1
+apiversion: 2
+architectures: armv7 arm64 i386 x86_64
+description: Titanium-SDK
+author: Federico Boschini
+license: MIT
+copyright: NearIT - 2018
+
+# these should not be edited
+name: Titanium-SDK
+moduleid: com.nearit.com
+guid: 97537f16-010e-4da8-801e-16ef34322534
+platform: iphone
+minsdk: 5.5.1.GA
