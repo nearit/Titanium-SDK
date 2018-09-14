@@ -8,20 +8,20 @@ TODO: Enter your module description here
 
 To access this module from JavaScript, you would do the following:
 
-    var titanium_sdk = require("com.nearit.com");
+    var NearIT = require("com.nearit.sdk.titanium");
 
-The titanium_sdk variable is a reference to the Module object.
+The NearIT variable is a reference to the Module object.
 
 ## Reference
 
 TODO: If your module has an API, you should document
 the reference here.
 
-### titanium_sdk.function
+### NearIT.function
 
 TODO: This is an example of a module function.
 
-### titanium_sdk.property
+### NearIT.property
 
 TODO: This is an example of a module property.
 

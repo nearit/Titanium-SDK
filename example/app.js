@@ -13,27 +13,8 @@ win.add(label);
 win.open();
 
 // TODO: write your module tests here
-var titanium_sdk = require('com.nearit.com');
-Ti.API.info("module is => " + titanium_sdk);
+var NearIT = require('com.nearit.sdk.titanium');
+Ti.API.info("module is => " + NearIT);
 
-label.text = titanium_sdk.example();
-
-Ti.API.info("module exampleProp is => " + titanium_sdk.exampleProp);
-titanium_sdk.exampleProp = "This is a test value";
-
-if (Ti.Platform.name == "android") {
-	var proxy = titanium_sdk.createExample({
-		message: "Creating an example Proxy",
-		backgroundColor: "red",
-		width: 100,
-		height: 100,
-		top: 100,
-		left: 150
-	});
-
-	proxy.printMessage("Hello world!");
-	proxy.message = "Hi world!.  It's me again.";
-	proxy.printMessage("Hello world!");
-	win.add(proxy);
-}
+// TODO: more APIs examples
 
