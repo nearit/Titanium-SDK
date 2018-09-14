@@ -11,10 +11,6 @@
 
 @interface ComNearitSdkTitaniumModule : TiModule<NITManagerDelegate>
 {
-    @private
-    KrollCallback *successCallback;
-    KrollCallback *errorCallback;
-    KrollCallback *requestDataCallback;
     
 }
 
