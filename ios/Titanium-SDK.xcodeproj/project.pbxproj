@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -22,11 +22,12 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		24DD6CF91134B3F500162E58 /* ComNearitComModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* ComNearitComModule.h */; };
-		24DD6CFA1134B3F500162E58 /* ComNearitComModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComNearitComModule.m */; };
-		24DE9E1111C5FE74003F90F6 /* ComNearitComModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DE9E0F11C5FE74003F90F6 /* ComNearitComModuleAssets.h */; };
-		24DE9E1211C5FE74003F90F6 /* ComNearitComModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* ComNearitComModuleAssets.m */; };
-		AA747D9F0F9514B9006C5449 /* ComNearitCom_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComNearitCom_Prefix.pch */; };
+		24DD6CF91134B3F500162E58 /* ComNearitSdkTitaniumModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* ComNearitSdkTitaniumModule.h */; };
+		24DD6CFA1134B3F500162E58 /* ComNearitSdkTitaniumModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComNearitSdkTitaniumModule.m */; };
+		24DE9E1111C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DE9E0F11C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.h */; };
+		24DE9E1211C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.m */; };
+		380D24F8214A724200892B0C /* NearITSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 380D24F7214A724200892B0C /* NearITSDK.framework */; };
+		AA747D9F0F9514B9006C5449 /* ComNearitSdkTitanium_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComNearitSdkTitanium_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,15 +41,29 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		383CD37921481AE300DD74D6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		24DD6CF71134B3F500162E58 /* ComNearitComModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ComNearitComModule.h"; path = "Classes/ComNearitComModule.h"; sourceTree = "<group>"; };
-		24DD6CF81134B3F500162E58 /* ComNearitComModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ComNearitComModule.m"; path = "Classes/ComNearitComModule.m"; sourceTree = "<group>"; };
+		24DD6CF71134B3F500162E58 /* ComNearitSdkTitaniumModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComNearitSdkTitaniumModule.h; path = Classes/ComNearitSdkTitaniumModule.h; sourceTree = "<group>"; };
+		24DD6CF81134B3F500162E58 /* ComNearitSdkTitaniumModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComNearitSdkTitaniumModule.m; path = Classes/ComNearitSdkTitaniumModule.m; sourceTree = "<group>"; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
-		24DE9E0F11C5FE74003F90F6 /* ComNearitComModuleAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ComNearitComModuleAssets.h"; path = "Classes/ComNearitComModuleAssets.h"; sourceTree = "<group>"; };
-		24DE9E1011C5FE74003F90F6 /* ComNearitComModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ComNearitComModuleAssets.m"; path = "Classes/ComNearitComModuleAssets.m"; sourceTree = "<group>"; };
-		AA747D9E0F9514B9006C5449 /* ComNearitCom_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ComNearitCom_Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		24DE9E0F11C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComNearitSdkTitaniumModuleAssets.h; path = Classes/ComNearitSdkTitaniumModuleAssets.h; sourceTree = "<group>"; };
+		24DE9E1011C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComNearitSdkTitaniumModuleAssets.m; path = Classes/ComNearitSdkTitaniumModuleAssets.m; sourceTree = "<group>"; };
+		380D24F7214A724200892B0C /* NearITSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NearITSDK.framework; path = platform/NearITSDK.framework; sourceTree = "<group>"; };
+		383CD46A214828D300DD74D6 /* module.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = module.xcconfig; sourceTree = "<group>"; };
+		AA747D9E0F9514B9006C5449 /* ComNearitSdkTitanium_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComNearitSdkTitanium_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		D2AAC07E0554694100DB518D /* libComNearitCom.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libComNearitCom.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2AAC07E0554694100DB518D /* libcom.nearit.sdk.titanium.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcom.nearit.sdk.titanium.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				380D24F8214A724200892B0C /* NearITSDK.framework in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -66,7 +82,7 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D2AAC07E0554694100DB518D /* libComNearitCom.a */,
+				D2AAC07E0554694100DB518D /* libcom.nearit.sdk.titanium.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -85,6 +101,7 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				380D24F7214A724200892B0C /* NearITSDK.framework */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -93,10 +110,10 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				24DE9E0F11C5FE74003F90F6 /* ComNearitComModuleAssets.h */,
-				24DE9E1011C5FE74003F90F6 /* ComNearitComModuleAssets.m */,
-				24DD6CF71134B3F500162E58 /* ComNearitComModule.h */,
-				24DD6CF81134B3F500162E58 /* ComNearitComModule.m */,
+				24DE9E0F11C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.h */,
+				24DE9E1011C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.m */,
+				24DD6CF71134B3F500162E58 /* ComNearitSdkTitaniumModule.h */,
+				24DD6CF81134B3F500162E58 /* ComNearitSdkTitaniumModule.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -104,7 +121,8 @@
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				AA747D9E0F9514B9006C5449 /* ComNearitCom_Prefix.pch */,
+				383CD46A214828D300DD74D6 /* module.xcconfig */,
+				AA747D9E0F9514B9006C5449 /* ComNearitSdkTitanium_Prefix.pch */,
 				24DD6D1B1134B66800162E58 /* titanium.xcconfig */,
 			);
 			name = "Other Sources";
@@ -117,9 +135,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA747D9F0F9514B9006C5449 /* ComNearitCom_Prefix.pch in Headers */,
-				24DD6CF91134B3F500162E58 /* ComNearitComModule.h in Headers */,
-				24DE9E1111C5FE74003F90F6 /* ComNearitComModuleAssets.h in Headers */,
+				AA747D9F0F9514B9006C5449 /* ComNearitSdkTitanium_Prefix.pch in Headers */,
+				24DD6CF91134B3F500162E58 /* ComNearitSdkTitaniumModule.h in Headers */,
+				24DE9E1111C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +151,7 @@
 				D2AAC07A0554694100DB518D /* Headers */,
 				D2AAC07B0554694100DB518D /* Sources */,
 				D2AAC07C0554694100DB518D /* Frameworks */,
+				383CD37921481AE300DD74D6 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -140,7 +159,7 @@
 			);
 			name = "Titanium-SDK";
 			productName = "Titanium-SDK";
-			productReference = D2AAC07E0554694100DB518D /* libComNearitCom.a */;
+			productReference = D2AAC07E0554694100DB518D /* libcom.nearit.sdk.titanium.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -149,10 +168,10 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0800;
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "Titanium-SDK" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -184,7 +203,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# shell script goes here\n\npython \"${TITANIUM_SDK}/titanium.py\" run --dir=\"${PROJECT_DIR}\"\nexit $?\n";
+			shellScript = "# shell script goes here\n\nappc run --project-dir \"${PROJECT_DIR}\"\nexit $?\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -193,8 +212,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24DD6CFA1134B3F500162E58 /* ComNearitComModule.m in Sources */,
-				24DE9E1211C5FE74003F90F6 /* ComNearitComModuleAssets.m in Sources */,
+				24DD6CFA1134B3F500162E58 /* ComNearitSdkTitaniumModule.m in Sources */,
+				24DE9E1211C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,13 +232,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 24DD6D1B1134B66800162E58 /* titanium.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DSTROOT = "/tmp/ComNearitCom.dst";
+				DSTROOT = /tmp/ComNearitSdkTitanium.dst;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/platform";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ComNearitCom_Prefix.pch";
+				GCC_PREFIX_HEADER = ComNearitSdkTitanium_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
@@ -231,20 +252,29 @@
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/platform/NearITSDK.framework/Headers/**",
+					"$(PROJECT_DIR)/platform/NearITSDK.framework/PrivateHeaders/**",
+					"$(TITANIUM_BASE_SDK)",
+					"$(TITANIUM_BASE_SDK2)",
+					"$(TITANIUM_BASE_SDK3)",
+				);
 				INSTALL_PATH = /usr/local/lib;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				LIBRARY_SEARCH_PATHS = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/platform/NearITSDK.framework/**";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-DDEBUG",
 					"-DTI_POST_1_2",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "ComNearitCom";
+				PRODUCT_NAME = com.nearit.sdk.titanium;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = "-Wno-arc-performSelector-leaks";
 			};
 			name = Debug;
 		};
@@ -253,12 +283,18 @@
 			baseConfigurationReference = 24DD6D1B1134B66800162E58 /* titanium.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				DSTROOT = "/tmp/ComNearitCom.dst";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DSTROOT = /tmp/ComNearitSdkTitanium.dst;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/platform";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ComNearitCom_Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
+				GCC_PREFIX_HEADER = ComNearitSdkTitanium_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"TI_VERSION=$(TI_VERSION)",
+					NDEBUG,
+				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = NO;
@@ -269,15 +305,23 @@
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/platform/NearITSDK.framework/Headers/**",
+					"$(PROJECT_DIR)/platform/NearITSDK.framework/PrivateHeaders/**",
+					"$(TITANIUM_BASE_SDK)",
+					"$(TITANIUM_BASE_SDK2)",
+					"$(TITANIUM_BASE_SDK3)",
+				);
 				INSTALL_PATH = /usr/local/lib;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				LIBRARY_SEARCH_PATHS = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/platform/NearITSDK.framework/**";
 				OTHER_CFLAGS = "-DTI_POST_1_2";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "ComNearitCom";
+				PRODUCT_NAME = com.nearit.sdk.titanium;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = "-Wno-arc-performSelector-leaks";
 			};
 			name = Release;
 		};
@@ -288,11 +332,12 @@
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DSTROOT = "/tmp/ComNearitCom.dst";
+				DSTROOT = /tmp/ComNearitSdkTitanium.dst;
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ComNearitCom_Prefix.pch";
+				GCC_PREFIX_HEADER = ComNearitSdkTitanium_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
@@ -304,6 +349,11 @@
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(TITANIUM_BASE_SDK)/**",
+					"$(TITANIUM_BASE_SDK2)",
+					"$(TITANIUM_BASE_SDK3)",
+				);
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -311,7 +361,7 @@
 					"-DTI_POST_1_2",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "ComNearitCom";
+				PRODUCT_NAME = com.nearit.sdk.titanium;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -326,11 +376,12 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LIBRARY = "libstdc++";
-				DSTROOT = "/tmp/ComNearitCom.dst";
+				DSTROOT = /tmp/ComNearitSdkTitanium.dst;
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ComNearitCom_Prefix.pch";
+				GCC_PREFIX_HEADER = ComNearitSdkTitanium_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
@@ -342,11 +393,16 @@
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(TITANIUM_BASE_SDK)/**",
+					"$(TITANIUM_BASE_SDK2)",
+					"$(TITANIUM_BASE_SDK3)",
+				);
 				INSTALL_PATH = /usr/local/lib;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_CFLAGS = "-DTI_POST_1_2";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "ComNearitCom";
+				PRODUCT_NAME = com.nearit.sdk.titanium;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
@@ -360,6 +416,11 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					"$(TITANIUM_BASE_SDK)",
+					"$(TITANIUM_BASE_SDK2)",
+					"$(TITANIUM_BASE_SDK3)",
+				);
 				PRODUCT_NAME = "Build & test";
 			};
 			name = Debug;
@@ -371,6 +432,11 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(TITANIUM_BASE_SDK)/**",
+					"$(TITANIUM_BASE_SDK2)",
+					"$(TITANIUM_BASE_SDK3)",
+				);
 				PRODUCT_NAME = "Build & test";
 				ZERO_LINK = NO;
 			};
