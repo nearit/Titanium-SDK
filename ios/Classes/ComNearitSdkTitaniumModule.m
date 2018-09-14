@@ -109,6 +109,230 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
 }
 
 
+// MARK: NearIT Recipes handling
+
+- (BOOL)handleNearITContent: (id _Nonnull) content trackingInfo: (NITTrackingInfo* _Nullable) trackingInfo fromUserAction: (BOOL) fromUserAction
+{
+    if ([content isKindOfClass:[NITSimpleNotification class]]) {
+        // Simple notification
+        NITSimpleNotification *simple = (NITSimpleNotification*)content;
+        
+        NSString* message = [simple notificationMessage];
+        if (!message) {
+            message = @"";
+        }
+        
+        NITLogI(TAG, @"simple message \"%@\" with trackingInfo %@", message, trackingInfo);
+        
+        NSDictionary* eventContent = @{
+                                       EVENT_CONTENT_MESSAGE: message
+                                       };
+        
+        [self sendEventWithContent:eventContent
+                      NITEventType:EVENT_TYPE_SIMPLE
+                      trackingInfo:trackingInfo
+                    fromUserAction:fromUserAction];
+        
+        return YES;
+    } else if ([content isKindOfClass:[NITContent class]]) {
+        // Notification with Content
+        NITContent *nearContent = (NITContent*)content;
+        NITLogI(TAG, @"Content %@ trackingInfo %@", nearContent, trackingInfo);
+        
+        NSString* message = [nearContent notificationMessage];
+        if (!message) {
+            message = @"";
+        }
+        
+        NSString* title = [nearContent title];
+        if (!title) {
+            title = @"";
+        }
+        
+        NSString* text = [nearContent content];
+        if (!text) {
+            text = @"";
+        }
+        
+        id image;
+        if (nearContent.image) {
+            image = [self bundleNITImage:nearContent.image];
+        } else {
+            image = [NSNull null];
+        }
+        
+        id cta;
+        if (nearContent.link) {
+            cta = [self bundleNITContentLink:nearContent.link];
+        } else {
+            cta = [NSNull null];
+        }
+        
+        NSDictionary* eventContent = @{
+                                       EVENT_CONTENT_MESSAGE:message,
+                                       EVENT_CONTENT_TITLE:title,
+                                       EVENT_CONTENT_TEXT:text,
+                                       EVENT_CONTENT_IMAGE:image,
+                                       EVENT_CONTENT_CTA:cta
+                                       };
+        
+        [self sendEventWithContent:eventContent
+                      NITEventType:EVENT_TYPE_CONTENT
+                      trackingInfo:trackingInfo
+                    fromUserAction:fromUserAction];
+        
+        return YES;
+        
+    } else if ([content isKindOfClass:[NITFeedback class]]) {
+        // Feedback
+        NITFeedback* feedback = (NITFeedback*)content;
+        NITLogI(TAG, @"Feedback %@ trackingInfo %@", feedback, trackingInfo);
+        
+        NSString* message = [feedback notificationMessage];
+        if (!message) {
+            message = @"";
+        }
+        
+        NSData* feedbackData = [NSKeyedArchiver archivedDataWithRootObject:feedback];
+        NSString* feedbackB64 = [feedbackData base64EncodedStringWithOptions:0];
+        
+        NSDictionary* eventContent = @{
+                                       EVENT_CONTENT_MESSAGE: message,
+                                       EVENT_CONTENT_FEEDBACK: feedbackB64,
+                                       EVENT_CONTENT_QUESTION: [feedback question]
+                                       };
+        
+        [self sendEventWithContent:eventContent
+                      NITEventType:EVENT_TYPE_FEEDBACK
+                      trackingInfo:trackingInfo
+                    fromUserAction:fromUserAction];
+        
+        return YES;
+        
+    } else if ([content isKindOfClass:[NITCoupon class]]) {
+        // Coupon notification
+        NITCoupon *coupon = (NITCoupon*)content;
+        NITLogI(TAG, @"Coupon %@ trackingInfo %@", coupon, trackingInfo);
+        
+        NSString* message = [coupon notificationMessage];
+        if (!message) {
+            message = @"";
+        }
+        
+        NSDictionary* eventContent = @{
+                                       EVENT_CONTENT_MESSAGE: message,
+                                       EVENT_CONTENT_COUPON: [self bundleNITCoupon:coupon]
+                                       };
+        
+        [self sendEventWithContent:eventContent
+                      NITEventType:EVENT_TYPE_COUPON
+                      trackingInfo:trackingInfo
+                    fromUserAction:fromUserAction];
+        
+        return YES;
+        
+    } else if ([content isKindOfClass:[NITCustomJSON class]]) {
+        // Custom JSON notification
+        NITCustomJSON *custom = (NITCustomJSON*)content;
+        NITLogI(TAG, @"JSON message %@ trackingInfo %@", [custom content], trackingInfo);
+        
+        NSString* message = [custom notificationMessage];
+        if (!message) {
+            message = @"";
+        }
+        
+        NSDictionary* eventContent = @{
+                                       EVENT_CONTENT_MESSAGE: message,
+                                       EVENT_CONTENT_DATA: [custom content]
+                                       };
+        
+        [self sendEventWithContent:eventContent
+                      NITEventType:EVENT_TYPE_CUSTOM_JSON
+                      trackingInfo:trackingInfo
+                    fromUserAction:fromUserAction];
+        
+        return YES;
+    } else {
+        // unhandled content type
+        NSString* message = [NSString stringWithFormat:@"unknown content type %@ trackingInfo %@", content, trackingInfo];
+        NITLogW(TAG, message);
+        
+        return NO;
+    }
+}
+
+// MARK: Internal contents handling
+
+- (NSDictionary*)bundleNITCoupon:(NITCoupon* _Nonnull) coupon
+{
+    NSMutableDictionary* couponDictionary = [[NSMutableDictionary alloc] init];
+    [couponDictionary setObject:(coupon.title ? coupon.title : [NSNull null])
+                         forKey:@"name"];
+    [couponDictionary setObject:(coupon.couponDescription ? coupon.couponDescription : [NSNull null])
+                         forKey:@"description"];
+    [couponDictionary setObject:(coupon.value ? coupon.value : [NSNull null])
+                         forKey:@"value"];
+    [couponDictionary setObject:(coupon.expiresAt ? coupon.expiresAt : [NSNull null])
+                         forKey:@"expiresAt"];
+    [couponDictionary setObject:(coupon.redeemableFrom ? coupon.redeemableFrom : [NSNull null])
+                         forKey:@"redeemableFrom"];
+    
+    if (coupon.claims.count > 0) {
+        [couponDictionary setObject:coupon.claims[0].serialNumber forKey:@"serial"];
+        [couponDictionary setObject:coupon.claims[0].claimedAt forKey:@"claimedAt"];
+        [couponDictionary setObject:(coupon.claims[0].redeemedAt ? coupon.claims[0].redeemedAt : [NSNull null]) forKey:@"redeemedAt"];
+    }
+    
+    if (coupon.icon) {
+        if (coupon.icon.url || coupon.icon.smallSizeURL) {
+            [couponDictionary setObject:[self bundleNITImage:coupon.icon] forKey:@"image"];
+        }
+    }
+    
+    return couponDictionary;
+}
+
+- (NSDictionary*)bundleNITImage:(NITImage* _Nonnull) image
+{
+    return @{
+             @"fullSize": (image.url ? [image.url absoluteString] : [NSNull null]),
+             @"squareSize": (image.smallSizeURL ? [image.smallSizeURL absoluteString] : [NSNull null])
+             };
+}
+
+- (NSDictionary*)bundleNITContentLink:(NITContentLink* _Nonnull) cta {
+    return @{
+             @"label": cta.label,
+             @"url": [cta.url absoluteString]
+             };
+}
+
+// MARK: NearIT content delivered through events
+
+- (void) sendEventWithContent:(NSDictionary* _Nonnull) content NITEventType:(NSString* _Nonnull) eventType trackingInfo:(NITTrackingInfo* _Nullable) trackingInfo fromUserAction:(BOOL) fromUserAction
+{
+    NSString* trackingInfoB64;
+    if (trackingInfo) {
+        NSData* trackingInfoData = [NSKeyedArchiver archivedDataWithRootObject:trackingInfo];
+        trackingInfoB64 = [trackingInfoData base64EncodedStringWithOptions:0];
+    }
+    
+    NSDictionary* event = @{
+                            EVENT_TYPE: eventType,
+                            EVENT_CONTENT: content,
+                            EVENT_TRACKING_INFO: (trackingInfoB64 ? trackingInfoB64 : [NSNull null]),
+                            EVENT_FROM_USER_ACTION: [NSNumber numberWithBool:fromUserAction]
+                            };
+    
+//    if (_listeners > 0) {
+//        [self sendEventWithName:RN_NATIVE_EVENTS_TOPIC
+//                           body:event];
+//    } else {
+//        [[RNNearItBackgroundQueue defaultQueue] addNotification:event];
+//    }
+}
+
+
 #pragma Public APIs
 
 // MARK: NearIT Radar
@@ -213,7 +437,9 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
 }
 
 - (void)manager:(NITManager * _Nonnull)manager eventWithContent:(id _Nonnull)content trackingInfo:(NITTrackingInfo * _Nonnull)trackingInfo {
-    // handle content
+    [self handleNearITContent:content
+                 trackingInfo:trackingInfo
+               fromUserAction:NO];
 }
 
 @end
