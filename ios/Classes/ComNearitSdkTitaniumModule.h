@@ -16,7 +16,7 @@
 
 #if !TARGET_OS_TV
 + (void)application:(UIApplication* _Nonnull)application performFetchWithCompletionHandler:(void (^_Nonnull)(UIBackgroundFetchResult))completionHandler;
-+ (void)disableDefaultRangingNotifications;
++ (void)disableDefaultRangingNotifications:(id _Nullable)unused;
 + (BOOL)application:(UIApplication *_Nonnull)app openURL:(NSURL *_Nullable)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *_Nullable)options;
 #endif
 
