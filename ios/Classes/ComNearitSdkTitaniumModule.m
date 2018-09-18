@@ -98,7 +98,7 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
 
 // MARK: NearIT test devices
 
-+ (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+- (BOOL)handleNearITContent: (id _Nonnull) content trackingInfo: (NITTrackingInfo* _Nullable) trackingInfo
     return [[NITManager defaultManager] application:app openURL:url options:options];
 }
 
@@ -111,7 +111,6 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
 
 // MARK: NearIT Recipes handling
 
-- (BOOL)handleNearITContent: (id _Nonnull) content trackingInfo: (NITTrackingInfo* _Nullable) trackingInfo fromUserAction: (BOOL) fromUserAction
 {
     if ([content isKindOfClass:[NITSimpleNotification class]]) {
         // Simple notification
@@ -130,8 +129,7 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
         
         [self sendEventWithContent:eventContent
                       NITEventType:EVENT_TYPE_SIMPLE
-                      trackingInfo:trackingInfo
-                    fromUserAction:fromUserAction];
+                      trackingInfo:trackingInfo];
         
         return YES;
     } else if ([content isKindOfClass:[NITContent class]]) {
@@ -178,8 +176,7 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
         
         [self sendEventWithContent:eventContent
                       NITEventType:EVENT_TYPE_CONTENT
-                      trackingInfo:trackingInfo
-                    fromUserAction:fromUserAction];
+                      trackingInfo:trackingInfo];
         
         return YES;
         
@@ -204,8 +201,7 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
         
         [self sendEventWithContent:eventContent
                       NITEventType:EVENT_TYPE_FEEDBACK
-                      trackingInfo:trackingInfo
-                    fromUserAction:fromUserAction];
+                      trackingInfo:trackingInfo];
         
         return YES;
         
@@ -226,8 +222,7 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
         
         [self sendEventWithContent:eventContent
                       NITEventType:EVENT_TYPE_COUPON
-                      trackingInfo:trackingInfo
-                    fromUserAction:fromUserAction];
+                      trackingInfo:trackingInfo];
         
         return YES;
         
@@ -248,8 +243,7 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
         
         [self sendEventWithContent:eventContent
                       NITEventType:EVENT_TYPE_CUSTOM_JSON
-                      trackingInfo:trackingInfo
-                    fromUserAction:fromUserAction];
+                      trackingInfo:trackingInfo];
         
         return YES;
     } else {
@@ -261,7 +255,7 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
     }
 }
 
-// MARK: Internal contents handling
+// MARK: INTERNAL contents handling
 
 - (NSDictionary*)bundleNITCoupon:(NITCoupon* _Nonnull) coupon
 {
@@ -307,9 +301,9 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
              };
 }
 
-// MARK: NearIT content delivered through events
+// MARK: INTERNAL NearIT content delivered through events
 
-- (void) sendEventWithContent:(NSDictionary* _Nonnull) content NITEventType:(NSString* _Nonnull) eventType trackingInfo:(NITTrackingInfo* _Nullable) trackingInfo fromUserAction:(BOOL) fromUserAction
+- (void) sendEventWithContent:(NSDictionary* _Nonnull) content NITEventType:(NSString* _Nonnull) eventType trackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
 {
     NSString* trackingInfoB64;
     if (trackingInfo) {
@@ -320,16 +314,11 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
     NSDictionary* event = @{
                             EVENT_TYPE: eventType,
                             EVENT_CONTENT: content,
-                            EVENT_TRACKING_INFO: (trackingInfoB64 ? trackingInfoB64 : [NSNull null]),
-                            EVENT_FROM_USER_ACTION: [NSNumber numberWithBool:fromUserAction]
+                            EVENT_TRACKING_INFO: (trackingInfoB64 ? trackingInfoB64 : [NSNull null])
                             };
     
-//    if (_listeners > 0) {
-//        [self sendEventWithName:RN_NATIVE_EVENTS_TOPIC
-//                           body:event];
-//    } else {
-//        [[RNNearItBackgroundQueue defaultQueue] addNotification:event];
-//    }
+    // TODO: send event through Titanium events ??
+    //[self sendEventWithName:NEARIT_NATIVE_EVENTS_TOPIC body:event];
 }
 
 
@@ -424,7 +413,7 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
 
 // MARK: NearIT Customization
 
-+ (void)disableDefaultRangingNotifications:(id)unused
+- (void)disableDefaultRangingNotifications:(id)unused
 {
     [NITManager defaultManager].showForegroundNotification = false;
 }
