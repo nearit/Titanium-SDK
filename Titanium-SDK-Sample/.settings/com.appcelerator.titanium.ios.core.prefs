@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+iosLaunchConfigurationAttributes/ATTR_MINIFY=true
+iosLaunchConfigurationAttributes/ATTR_PROJECT_NAME=Titanium-SDK-Sample
+iosLaunchConfigurationAttributes/ATTR_UPLOAD_DEBUG_SYMBOLS=false
+iosLaunchConfigurationAttributes/appid=com.nearit.sdk.titanium.sample
+iosLaunchConfigurationAttributes/certificate=Federico Boschini (PM7SLMZCAQ)
+iosLaunchConfigurationAttributes/keychain=
+iosLaunchConfigurationAttributes/sdk_version=11.4
+iosLaunchConfigurationAttributes/uuid=2a4673c3-2e0b-41b4-85b3-ffcd8567db3a

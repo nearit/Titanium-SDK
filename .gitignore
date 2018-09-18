@@ -2,3 +2,9 @@
 iphone/build/
 
 ios/build/
+
+Titanium-SDK-Sample/build/
+
+Titanium-SDK-Sample/Certificates\.p12
+
+Titanium-SDK-Sample/CertificateSigningRequest\.certSigningRequest
