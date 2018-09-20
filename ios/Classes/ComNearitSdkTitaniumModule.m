@@ -523,6 +523,24 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     if (args != nil) [[NITManager defaultManager] triggerInAppEventWithKey:args];
 }
 
+
+
+// MARK: Configure Push Notifications
+
+- (void)registerForPushNotifications:(NSArray *) deviceToken
+{
+    [[NITManager defaultManager] setDeviceTokenWithData:deviceToken[0]];
+}
+
+- (void)didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: userInfo];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NEARIT_LOCAL_EVENTS_TOPIC
+                                                        object:self
+                                                      userInfo:@{@"data": [userInfo objectForKey:@"data"]}];
+}
+
 // MARK: NearIT Customization
 
 + (void)disableDefaultRangingNotifications:(id)unused
