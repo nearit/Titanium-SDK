@@ -13,6 +13,8 @@
 
 #define TAG @"NearItTitanium"
 
+#define IS_EMPTY(v) (v == nil || [v length] <= 0)
+
 // Local Events topic (used by NotificationCenter to handle incoming notifications)
 NSString* const NEARIT_LOCAL_EVENTS_TOPIC = @"NearItTitaniumLocalEvents";
 
