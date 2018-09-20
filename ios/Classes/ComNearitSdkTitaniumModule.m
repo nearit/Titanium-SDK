@@ -515,6 +515,14 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     [[NITManager defaultManager] setUserDataWithKey:key multiValue:values];
 }
 
+// MARK: NearIT in-app trigger
+
+- (void)triggerInAppEvent:(id)args
+{
+    ENSURE_SINGLE_ARG(args,NSString);
+    if (args != nil) [[NITManager defaultManager] triggerInAppEventWithKey:args];
+}
+
 // MARK: NearIT Customization
 
 - (void)disableDefaultRangingNotifications:(id)unused
