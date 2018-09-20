@@ -525,8 +525,9 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 
 // MARK: NearIT Customization
 
-- (void)disableDefaultRangingNotifications:(id)unused
++ (void)disableDefaultRangingNotifications:(id)unused
 {
+    NSLog(@"Disabling default ranging notifications")
     [NITManager defaultManager].showForegroundNotification = false;
 }
 
