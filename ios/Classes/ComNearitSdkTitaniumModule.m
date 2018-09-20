@@ -15,6 +15,7 @@
 
 #define IS_EMPTY(v) (v == nil || [v length] <= 0)
 
+NSString* const NEARIT_NATIVE_EVENTS_TOPIC = @"NearItEvent";
 // Local Events topic (used by NotificationCenter to handle incoming notifications)
 NSString* const NEARIT_LOCAL_EVENTS_TOPIC = @"NearItTitaniumLocalEvents";
 
@@ -26,7 +27,7 @@ NSString* const EVENT_TYPE_CONTENT = @"NearIt.Events.Content";
 NSString* const EVENT_TYPE_FEEDBACK = @"NearIt.Events.Feedback";
 
 // Events content
-NSString* const EVENT_TYPE = @"type";
+NSString* const EVENT_TYPE = @"contentType";
 NSString* const EVENT_TRACKING_INFO = @"trackingInfo";
 NSString* const EVENT_CONTENT = @"content";
 NSString* const EVENT_CONTENT_MESSAGE = @"message";
@@ -36,15 +37,13 @@ NSString* const EVENT_CONTENT_TEXT = @"text";
 NSString* const EVENT_CONTENT_TITLE = @"title";
 NSString* const EVENT_CONTENT_IMAGE = @"image";
 NSString* const EVENT_CONTENT_CTA = @"cta";
+NSString* const EVENT_CONTENT_CTA_LABEL = @"label";
+NSString* const EVENT_CONTENT_CTA_LINK = @"url";
 NSString* const EVENT_CONTENT_FEEDBACK = @"feedbackId";
 NSString* const EVENT_CONTENT_QUESTION = @"feedbackQuestion";
-NSString* const EVENT_FROM_USER_ACTION = @"fromUserAction";
 NSString* const EVENT_STATUS = @"status";
 
 // Error codes
-NSString* const E_START_RADAR_ERROR = @"E_START_RADAR_ERROR";
-NSString* const E_STOP_RADAR_ERROR = @"E_STOP_RADAR_ERROR";
-NSString* const E_SEND_TRACKING_ERROR = @"E_SEND_TRACKING_ERROR";
 NSString* const E_SEND_FEEDBACK_ERROR = @"E_SEND_FEEDBACK_ERROR";
 NSString* const E_USER_PROFILE_GET_ERROR = @"E_USER_PROFILE_GET_ERROR";
 NSString* const E_USER_PROFILE_SET_ERROR = @"E_USER_PROFILE_SET_ERROR";
@@ -52,7 +51,6 @@ NSString* const E_USER_PROFILE_RESET_ERROR = @"E_USER_PROFILE_RESET_ERROR";
 NSString* const E_USER_PROFILE_CREATE_ERROR = @"E_USER_PROFILE_CREATE_ERROR";
 NSString* const E_USER_PROFILE_DATA_ERROR = @"E_USER_PROFILE_DATA_ERROR";
 NSString* const E_COUPONS_RETRIEVAL_ERROR = @"E_COUPONS_RETRIEVAL_ERROR";
-NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
 
 @implementation ComNearitSdkTitaniumModule
 
@@ -118,21 +116,9 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 }
 
 
-// MARK: NearIT test devices
+// MARK: INTERNAL NearIT Recipes handling
 
 - (BOOL)handleNearITContent: (id _Nonnull) content trackingInfo: (NITTrackingInfo* _Nullable) trackingInfo
-    return [[NITManager defaultManager] application:app openURL:url options:options];
-}
-
-+ (void)application:(UIApplication* _Nonnull)application performFetchWithCompletionHandler:(void (^_Nonnull)(UIBackgroundFetchResult))completionHandler {
-    [[NITManager defaultManager] application:application performFetchWithCompletionHandler:^(UIBackgroundFetchResult result) {
-        completionHandler(result);
-    }];
-}
-
-
-// MARK: NearIT Recipes handling
-
 {
     if ([content isKindOfClass:[NITSimpleNotification class]]) {
         // Simple notification
