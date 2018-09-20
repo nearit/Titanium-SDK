@@ -81,6 +81,12 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     return @"com.nearit.sdk.titanium";
 }
 
+- (void)_configure
+{
+    [super _configure];
+    [[TiApp app] registerApplicationDelegate:self];
+}
+
 #pragma mark Lifecycle
 
 - (void)startup
@@ -93,7 +99,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
         NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:path];
         NSString* NITApiKey = [dict objectForKey:@"NearIT API Key"];
-        NSLog(@"API_KEY: %@", NITApiKey);
+
         // Pass API Key to NITManager
         if (NITApiKey) {
             [NITManager setupWithApiKey:NITApiKey];
@@ -102,6 +108,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         }
         
         [NITManager defaultManager].delegate = self;
+        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
         [NITManager setFrameworkName:@"titanium"];
     }
     
@@ -426,16 +433,43 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 }
 
 
+
 #pragma NearIT Manager Delegate
 
 - (void)manager:(NITManager * _Nonnull)manager eventFailureWithError:(NSError * _Nonnull)error {
     // handle errors (only for information purpose)
+    NSLog(error.localizedDescription)
 }
 
 - (void)manager:(NITManager * _Nonnull)manager eventWithContent:(id _Nonnull)content trackingInfo:(NITTrackingInfo * _Nonnull)trackingInfo {
-    [self handleNearITContent:content
-                 trackingInfo:trackingInfo
-               fromUserAction:NO];
+    NSLog(@"eventwithcontent")
+    //[self handleNearITContent:content trackingInfo:trackingInfo];
+}
+
+#pragma UNUserNotificationCenter Delegate
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+    completionHandler(UNNotificationPresentationOptionAlert);
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
+    BOOL isNearNotification = [[NITManager defaultManager] processRecipeWithResponse:response completion:^(NITReactionBundle * _Nullable content, NITTrackingInfo * _Nullable trackingInfo, NSError * _Nullable error) {
+        if (content) {
+            [self handleNearITContent:content trackingInfo: trackingInfo];
+        }
+    }];
+}
+
+#pragma App Delegate
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    return [[NITManager defaultManager] application:app openURL:url options:options];
+}
+
+- (void)application:(UIApplication* _Nonnull)application performFetchWithCompletionHandler:(void (^_Nonnull)(UIBackgroundFetchResult))completionHandler {
+    [[NITManager defaultManager] application:application performFetchWithCompletionHandler:^(UIBackgroundFetchResult result) {
+        completionHandler(result);
+    }];
 }
 
 @end
