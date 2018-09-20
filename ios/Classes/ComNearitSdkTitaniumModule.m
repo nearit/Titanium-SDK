@@ -378,7 +378,9 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     KrollCallback* successCallback = [args objectForKey:@"success"];
     
     if (IS_EMPTY(trackingInfo)) {
-        [errorCallback call:@[@{ @"error" : @"missing trackingInfo" }] thisObject:nil];
+        if (errorCallback) {
+            [errorCallback call:@[@{ @"error" : @"missing trackingInfo" }] thisObject:nil];
+        }
     } else {
         NSData* trackingInfoData = [[NSData alloc] initWithBase64EncodedString:trackingInfo
                                                                        options:NSDataBase64DecodingIgnoreUnknownCharacters];
@@ -387,9 +389,13 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         
         if (unBundledTrackingInfo) {
             [[NITManager defaultManager] sendTrackingWithTrackingInfo:unBundledTrackingInfo event:status];
-            [successCallback call:@[@{ @"success" : @"successfully sent tracking" }] thisObject:nil];
+            if (successCallback) {
+                [successCallback call:@[@{ @"success" : @"successfully sent tracking" }] thisObject:nil];
+            }
         } else {
-            [errorCallback call:@[@{ @"error" : @"failed to send tracking" }] thisObject:nil];
+            if (errorCallback) {
+                [errorCallback call:@[@{ @"error" : @"failed to send tracking" }] thisObject:nil];
+            }
         }
     }
 }
@@ -418,9 +424,13 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     [[NITManager defaultManager] sendEventWithEvent:feedbackEvent
                                   completionHandler:^(NSError * _Nullable error) {
                                       if (error) {
-                                          [errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
+                                          if (errorCallback) {
+                                              [errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
+                                          }
                                       } else {
-                                          [successCallback call:@[@{ @"success" : @"successfully sent feedback" }] thisObject: nil];
+                                          if(successCallback) {
+                                              [successCallback call:@[@{ @"success" : @"successfully sent feedback" }] thisObject: nil];
+                                          }
                                       }
     }];
 }
@@ -478,9 +488,13 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     
     [[NITManager defaultManager] optOutWithCompletionHandler:^(BOOL success) {
         if (success) {
-            [successCallback call:@[@"Successfully opted-out"] thisObject:nil];
+            if (successCallback) {
+                [successCallback call:@[@"Successfully opted-out"] thisObject:nil];
+            }
         } else {
-            [errorCallback call:@[@{ @"error" : @"Error while opting-out. You should retry." }] thisObject:nil];
+            if (errorCallback) {
+                [errorCallback call:@[@{ @"error" : @"Error while opting-out. You should retry." }] thisObject:nil];
+            }
         }
     }];
 }
