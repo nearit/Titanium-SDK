@@ -14,5 +14,5 @@ The NearIT variable is a reference to the Module object.
 
 ## Reference
 
-https://docs.nearit.com/titanium/installation/
+[Documentation](https://docs.nearit.com/titanium/installation/)
 
