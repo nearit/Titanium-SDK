@@ -442,15 +442,17 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 - (void)getProfileId:(id)args
 {
     ENSURE_SINGLE_ARG(args,NSDictionary);
-    KrollCallback* callback = [args objectForKey:@"callback"];
+    KrollCallback* successCallback = [args objectForKey:@"success"];
+    KrollCallback* errorCallback = [args objectForKey:@"error"];
     
     [[NITManager defaultManager] profileIdWithCompletionHandler:^(NSString * _Nullable profileId, NSError * _Nullable error) {
-        if (callback) {
-            if (!error) {
-                [callback call:@[profileId] thisObject:nil];
-            } else {
-                [callback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
-                
+        if (!error) {
+            if (successCallback) {
+                [successCallback call:@[profileId] thisObject:nil];
+            }
+        } else {
+            if (errorCallback) {
+                [errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
             }
         }
     }];
@@ -459,24 +461,26 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 - (void)resetProfileId:(id)args
 {
     ENSURE_SINGLE_ARG(args,NSDictionary);
-    KrollCallback* callback = [args objectForKey:@"callback"];
+    KrollCallback* successCallback = [args objectForKey:@"success"];
+    KrollCallback* errorCallback = [args objectForKey:@"error"];
     
     [[NITManager defaultManager] resetProfileWithCompletionHandler:^(NSString * _Nullable profileId, NSError * _Nullable error) {
-        if (callback) {
-            if (!error) {
-                [callback call:@[profileId] thisObject:nil];
-            } else {
-                [callback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
-                
+        if (!error) {
+            if (successCallback) {
+                [successCallback call:@[profileId] thisObject:nil];
+            }
+        } else {
+            if (errorCallback) {
+                [errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
             }
         }
     }];
 }
 
-- (void)setProfileId:(NSString *_Nonnull)value
+- (void)setProfileId:(id)args
 {
-    ENSURE_TYPE(value, NSString)
-    if (value != nil) [[NITManager defaultManager] setProfileId:[TiUtils stringValue:(value)]];
+    ENSURE_SINGLE_ARG(args,NSString);
+    if (args != nil) [[NITManager defaultManager] setProfileId:args];
 }
 
 - (void)optOut:(id)args
