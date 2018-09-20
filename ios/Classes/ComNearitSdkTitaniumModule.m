@@ -286,8 +286,8 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
                          forKey:@"redeemableFrom"];
     
     if (coupon.claims.count > 0) {
-        [couponDictionary setObject:coupon.claims[0].serialNumber forKey:@"serial"];
-        [couponDictionary setObject:coupon.claims[0].claimedAt forKey:@"claimedAt"];
+        [couponDictionary setObject:(coupon.claims[0].serialNumber ? coupon.claims[0].serialNumber : [NSNull null]) forKey:@"serial"];
+        [couponDictionary setObject:(coupon.claims[0].claimedAt ? coupon.claims[0].claimedAt : [NSNull null]) forKey:@"claimedAt"];
         [couponDictionary setObject:(coupon.claims[0].redeemedAt ? coupon.claims[0].redeemedAt : [NSNull null]) forKey:@"redeemedAt"];
     }
     
