@@ -1,3 +1,27 @@
+# NearIT SDK module
+
+## Description
+
+NearIT allows to engage app users by sending context-aware targeted content.
+
+## Accessing the NearIT Module
+
+To access this module from JavaScript, you would do the following:
+
+var NearIT = require("com.nearit.sdk.titanium");
+
+The NearIT variable is a reference to the Module object.
+
+## Usage
+See app.js for usage.
+
+## Author
+NearIT. For support email [support@nearit.com](mailto:support@nearit.com).
+
+## Installing
+* Follow the steps at http://docs.nearit.com/titanium/installation/ to add and integrate the NearIT module in your project
+
+## License
 The MIT License (MIT)
 
 Copyright (c) 2018 NearIT (https://www.nearit.com)
