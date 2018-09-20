@@ -140,7 +140,7 @@ NearIT.setMultiChoiceUserData({
  * 	NearIT.RECIPE_RECEIVED
  * 	NearIT.RECIPE_OPENED
  * 	NearIT.RECIPE_CTA_TAPPED
- * 	or any strings you want to use as custom tracking
+ * 	or any string you want to use as custom tracking
  */
 
 NearIT.sendTracking({
