@@ -352,6 +352,31 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     [[NITManager defaultManager] stop];
 }
 
+// MARK: NearIT Coupon history
+
+- (void)getCoupons:(id)args
+{
+    ENSURE_SINGLE_ARG(args,NSDictionary);
+    KrollCallback* errorCallback = [args objectForKey:@"error"];
+    KrollCallback* successCallback = [args objectForKey:@"success"];
+    
+    NSMutableArray *bundledCoupons = [[NSMutableArray alloc] init];
+    
+    [[NITManager defaultManager] couponsWithCompletionHandler:^(NSArray<NITCoupon *> * _Nullable coupons, NSError * _Nullable error) {
+        if (!error) {
+            if (successCallback) {
+                for(NITCoupon *c in coupons) {
+                    [bundledCoupons addObject:[self bundleNITCoupon:c]];
+                }
+                [successCallback call:bundledCoupons thisObject:nil];
+            }
+        } else {
+            if (errorCallback) {
+                [errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
+            }
+        }
+    }];
+}
 
 // MARK: NearIT Profiling & Opt-out
 
