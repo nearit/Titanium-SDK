@@ -84,7 +84,12 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 - (void)_configure
 {
     [super _configure];
-    [[TiApp app] registerApplicationDelegate:self];
+    @try {
+        [[TiApp app] registerApplicationDelegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"!!!!!!!!![ERROR]: Your Titanium SDK version is not > 7.3.0.GA, some features won't work");
+    }
 }
 
 #pragma mark Lifecycle
