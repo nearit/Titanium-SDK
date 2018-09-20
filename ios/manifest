@@ -15,4 +15,4 @@ name: Titanium-SDK
 moduleid: com.nearit.sdk.titanium
 guid: 2945aa85-2637-42c5-98db-adf07ff203c2
 platform: iphone
-minsdk: 5.5.0.GA
+minsdk: 7.0.0.GA
