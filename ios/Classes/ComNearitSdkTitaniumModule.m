@@ -406,6 +406,37 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     }
 }
 
+// MARK: Send Feedback
+
+- (void)sendFeedback:(id)args
+{
+    ENSURE_SINGLE_ARG(args,NSDictionary);
+    KrollCallback* successCallback = [args objectForKey:@"success"];
+    KrollCallback* errorCallback = [args objectForKey:@"error"];
+    NSInteger rating = [TiUtils intValue:([args objectForKey:@"rating"])];
+    NSString* comment = [args objectForKey:@"comment"];
+    NSString* feedbackComment = comment ? comment : @"";
+    NSString* feedbackId = [args objectForKey:@"feedbackId"];
+    
+    NSData* feedbackData = [[NSData alloc] initWithBase64EncodedString:feedbackId
+                                                               options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    
+    NITFeedback *feedback = [NSKeyedUnarchiver unarchiveObjectWithData:feedbackData];
+    
+    NITFeedbackEvent *feedbackEvent = [[NITFeedbackEvent alloc] initWithFeedback:feedback
+                                                                          rating:rating
+                                                                         comment:comment];
+    
+    [[NITManager defaultManager] sendEventWithEvent:feedbackEvent
+                                  completionHandler:^(NSError * _Nullable error) {
+                                      if (error) {
+                                          [errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
+                                      } else {
+                                          [successCallback call:@[@{ @"success" : @"successfully sent feedback" }] thisObject: nil];
+                                      }
+    }];
+}
+
 // MARK: NearIT Profiling & Opt-out
 
 - (void)getProfileId:(id)args
