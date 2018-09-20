@@ -378,6 +378,34 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     }];
 }
 
+
+// MARK: Trackings
+
+- (void)sendTracking:(id)args
+{
+    ENSURE_SINGLE_ARG(args,NSDictionary);
+    NSString* trackingInfo = [args objectForKey:@"trackingInfo"];
+    NSString* status = [args objectForKey:@"status"];
+    KrollCallback* errorCallback = [args objectForKey:@"error"];
+    KrollCallback* successCallback = [args objectForKey:@"success"];
+    
+    if (IS_EMPTY(trackingInfo)) {
+        [errorCallback call:@[@{ @"error" : @"missing trackingInfo" }] thisObject:nil];
+    } else {
+        NSData* trackingInfoData = [[NSData alloc] initWithBase64EncodedString:trackingInfo
+                                                                       options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        
+        NITTrackingInfo *unBundledTrackingInfo = [NSKeyedUnarchiver unarchiveObjectWithData:trackingInfoData];
+        
+        if (unBundledTrackingInfo) {
+            [[NITManager defaultManager] sendTrackingWithTrackingInfo:unBundledTrackingInfo event:status];
+            [successCallback call:@[@{ @"success" : @"successfully sent tracking" }] thisObject:nil];
+        } else {
+            [errorCallback call:@[@{ @"error" : @"failed to send tracking" }] thisObject:nil];
+        }
+    }
+}
+
 // MARK: NearIT Profiling & Opt-out
 
 - (void)getProfileId:(id)args
