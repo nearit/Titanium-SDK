@@ -1,73 +1,13 @@
-/**
- * Create a new `Ti.UI.TabGroup`.
- */
 var tabGroup = Ti.UI.createTabGroup();
 
 var NearIT = require('com.nearit.sdk.titanium');
 Ti.API.info("module is => " + NearIT);
 
-// 	NOT WORKING WHEN SDK < 7.0.0
-var TiApp = require('Titanium/TiApp');
-var UIApplicationDelegate = require('UIKit').UIApplicationDelegate;
-
-
-var TiAppApplicationDelegate = Hyperloop.defineClass('TiAppApplicationDelegate', 'NSObject', 'UIApplicationDelegate');
-
-TiAppApplicationDelegate.addMethod({
-	selector: 'application:didFinishLaunchingWithOptions:',
-	instance: true,
-	returnType: 'BOOL',
-	arguments: [
-		'UIApplication',
-		'NSDictionary'
-	],
-	callback: function(application, options) {
-		if (this.didFinishLaunchingWithOptions) {
-			return this.didFinishLaunchingWithOptions(application, options);
-		}
-		return true;
-	}
-});
-
-var applicationDelegate = new TiAppApplicationDelegate();
- 
-// Called when the application finished launching. Initialize SDK's here for example
-applicationDelegate.didFinishLaunchingWithOptions = function(application, options) {
-	Ti.API.info('Hey there!');
-	return true;
-};
- 
-TiApp.app().registerApplicationDelegate(applicationDelegate);
-
-// Monitor notifications received while app is in the background
-Ti.App.iOS.addEventListener('localnotificationaction', function(e) {
-  if (e.category === 'DOWNLOAD_CONTENT' && e.identifier === 'ACCEPT_IDENTIFIER') {
-    Ti.API.warn('(Use case: Start a background download');
-  } else if (e.category === 'DOWNLOAD_CONTENT' && e.identifier === 'RESPOND_IDENTIFIER') {
-    Ti.API.warn('Response: ' + e.typedText); // Note: Test this by adding a label, because it logs in the background
-  }
-
-  // Reset the badge value
-  if (e.badge > 0) {
-    Ti.UI.iOS.appBadge = 0;
-  }
-  Ti.API.warn('event: localnotificationaction');
-  // If the notification was dismissed, "e.identifier" will return "com.apple.UNNotifcationDismissActionIdentifier" for iOS 10+
-  //statusLabel.setText('Action (identifier):' + e.identifier)
-});
-
-// Monitor notifications received while app is in the foreground
-Ti.App.iOS.addEventListener('notification', function(e) {
-  Ti.API.warn('event: notification');
-});
-
-Ti.App.iOS.addEventListener('remotenotificationaction', function(e) {
-  Ti.API.warn('event: push notification');
-});
 
 // REGISTER FOR PUSH NOTIFICATIONS and give us push token
 Ti.Network.registerForPushNotifications({
 	success: function(token) {
+		// give us the token
 		NearIT.registerForPushNotifications(token.deviceToken);
 	},
 	error: function(e) {
@@ -80,57 +20,204 @@ Ti.Network.registerForPushNotifications({
 	}
 });
 
+/*
+ * (Just a utility)
+ * WORKAROUND TO CHECK IF NOTIFICATION PERMISSION WAS GRANTED
+ */ 
+Ti.App.addEventListener('resumed', function(e) {
+	if (Ti.Network.remoteNotificationsEnabled) {
+		console.log('Notification permission granted!');
+	} else {
+	    console.log('Notification permission NOT granted!');
+	}
+});
+
 // SET MINIMUM BACKGROUND FETCH INTERVAL
 Ti.App.iOS.setMinimumBackgroundFetchInterval(7200);
 
+// LISTEN FOR NEARIT CONTENT
+NearIT.addEventListener(NearIT.NEARIT_EVENTS, function(event) {
+	var message = event.content.message;
+	var trackingInfo = event.trackingInfo;
+	var content = event.content;
+	
+	// SEND CUSTOM TRACKING
+	NearIT.sendTracking({
+		trackingInfo: trackingInfo,
+		status: "Titanium rocks",
+		success: function(success) {
+			console.log("successfully sent tracking");
+		},
+		error: function(error) {
+			console.log("failed sent tracking");
+		}
+	});
+	
+	switch (event.contentType) {
+		case NearIT.SIMPLE:
+			console.log("simple, message:", message);
+			break;
+		case NearIT.CONTENT_NOTIFICATION:
+			console.log("content, message:", message);
+			console.log("content, title:", content.title);
+			console.log("content, text:", content.text);
+			console.log("content, cta:", content.cta);
+			break;
+		case NearIT.FEEDBACK:
+			console.log("feedback, message:", message);
+			console.log("feedback, question:", content.feedbackQuestion);
+			console.log("feedback, id:", content.feedbackId);
+			var rating = 5;
+			var comment = "titanium comment";
+			NearIT.sendFeedback({
+				feedbackId: content.feedbackId,
+				rating: rating,
+	    			success: function(success) {
+	    				// SUCCESS
+	    				console.log("successfully sent feedback");
+		    		},
+		    		error: function(error) {
+		    			// ERROR: FAILED SENDING FEEDBACK
+		    			console.log(error);
+		    		}
+    			});
+			break;
+		case NearIT.COUPON:
+			console.log("coupon, message", message);
+			break;
+		case NearIT.CUSTOM_JSON:
+			console.log("customJSON, message", message);
+			console.log("customJSON, data", content.data);
+			break;
+		default:
+			// Content type unrecognized
+	}
+});
+
 tabGroup.addTab(createTab1());
 tabGroup.addTab(createTabProfiling());
+tabGroup.tabsBackgroundColor = "#9f92ff";
+tabGroup.barColor = "#9f92ff";
 tabGroup.open();
 
 function createTab1() {
     var win = Ti.UI.createWindow({
-        title: "Tab 1",
-        backgroundColor: '#fff'
-    });
-    
-    var button = Ti.UI.createButton({
-    		title: "Start Radar",
-    		top: 10
+        backgroundColor: '#9f92ff',
+        title: "Main"
     });
     
     var requestLocation = Ti.UI.createButton({
-    		title: "Request location permission",
-    		top: 50
-    });
-    
-    var requestNotif = Ti.UI.createButton({
-    		title: "Request notification permission",
+    		title: "Location permission and start radar",
+    		color: '#fff',
     		top: 90
     });
     
-    button.addEventListener("click", function() {
-    		NearIT.startRadar();
+    var requestNotif = Ti.UI.createButton({
+    		title: "Notification permission",
+    		color: '#fff',
+    		top: 130
     });
     
-    requestLocation.addEventListener('click', function() {
-    		Ti.Geolocation.requestLocationPermissions(Ti.Geolocation.AUTHORIZATION_ALWAYS, function(e) {
-    			console.log(e);
-    		});
+    var triggerSimple = Ti.UI.createButton({
+    		title: "Trigger simple",
+    		color: '#fff',
+    		top: 170
     });
+     
+    var triggerContent = Ti.UI.createButton({
+    		title: "Trigger content",
+    		color: '#fff',
+    		top: 210
+    });
+     
+    var triggerFeedback = Ti.UI.createButton({
+    		title: "Trigger feedback",
+    		color: '#fff',
+    		top: 250
+    });
+    
+    var triggerCustomJSON = Ti.UI.createButton({
+    		title: "Trigger customJSON",
+    		color: '#fff',
+    		top: 290
+    });
+    
+    var getCoupons = Ti.UI.createButton({
+    		title: "Get coupons",
+    		color: '#fff',
+    		top: 330
+    });
+     
+    var getNotificationHistory = Ti.UI.createButton({
+    		title: "Get notification history",
+    		color: '#fff',
+    		top: 370
+    });
+    
+    requestLocation.addEventListener('click', handleLocationPermission);
     
     requestNotif.addEventListener('click', function() {
+    		// REQUEST NOTIFICATION PERMISSION
     		Ti.App.iOS.registerUserNotificationSettings({
     			types: [Ti.App.iOS.USER_NOTIFICATION_TYPE_ALERT, Ti.App.iOS.USER_NOTIFICATION_TYPE_BADGE , Ti.App.iOS.USER_NOTIFICATION_TYPE_SOUND]
     		});
     });
+    
+    triggerSimple.addEventListener('click', function() {
+    		// TRIGGER NEARIT IN-APP EVENT
+    		NearIT.triggerInAppEvent('in_app_event_test');
+    });
+    
+    triggerContent.addEventListener('click', function() {
+    		// TRIGGER NEARIT IN-APP EVENT
+    		NearIT.triggerInAppEvent('content');
+    });
+    
+    triggerFeedback.addEventListener('click', function() {
+    		// TRIGGER NEARIT IN-APP EVENT
+    		NearIT.triggerInAppEvent('feedback');
+    });
+    
+    triggerCustomJSON.addEventListener('click', function() {
+    		// TRIGGER NEARIT IN-APP EVENT
+    		NearIT.triggerInAppEvent('json');
+    });
+    
+    getCoupons.addEventListener('click', function() {
+    		// GET NEARIT COUPONS
+    		NearIT.getCoupons({
+    			success: function(coupons) {
+    				// SUCCESS: YOU GOT COUPON LIST
+    				console.log(coupons);
+	    		},
+	    		error: function(error) {
+	    			// ERROR: FAILED FETCHING COUPONS
+	    			console.log(error);
+	    		}
+    		});
+    });
+    
+    getNotificationHistory.addEventListener('click', function() {
+    		
+    });
 
-    win.add(button);
     win.add(requestLocation);
     win.add(requestNotif);
+    win.add(triggerSimple);
+    win.add(triggerContent);
+    win.add(triggerFeedback);
+    win.add(triggerCustomJSON);
+    win.add(getCoupons);
+    win.add(getNotificationHistory);
 
     var tab = Ti.UI.createTab({
-        title: "Tab 1",
-        window: win
+    		icon: "/assets/images/icon-nearit.png",
+    		activeIconIsMask: true, 
+    		iconIsMask: false,
+    		titleColor: "#fff",
+    		activeTitleColor: "#fff",
+    		title: "Main",
+        	window: win
     });
 
     return tab;
@@ -138,57 +225,78 @@ function createTab1() {
 
 function createTabProfiling() {
     var win = Ti.UI.createWindow({
-        title: "User Profiling",
-        backgroundColor: '#fff'
+        backgroundColor: '#9f92ff',
+        title: "User Profiling"
     });
     
     var getProfileIdButton = Ti.UI.createButton({
     		title: "Get ProfileId",
-    		top: 10
+    		color: '#fff',
+    		top: 90
     });
     
     var resetProfileIdButton = Ti.UI.createButton({
     		title: "Reset ProfileId",
-    		top: 50
+    		color: '#fff',
+    		top: 130
     });
     
     var setProfileIdButton = Ti.UI.createButton({
     		title: "Set ProfileId",
-    		top: 90
+    		color: '#fff',
+    		top: 170
     });
     
     var optOutButton = Ti.UI.createButton({
     		title: "OptOut",
-    		top: 130
+    		color: '#fff',
+    		top: 210
     });
     
     var singleDataButton = Ti.UI.createButton({
     		title: "Set single user data",
-    		top: 170
+    		color: '#fff',
+    		top: 250
     });
     
     var multiDataButton = Ti.UI.createButton({
     		title: "Set multichoice user data",
-    		top: 210
+    		color: '#fff',
+    		top: 290
     });
     
-    getProfileIdButton.addEventListener('click', function(e) {
+    getProfileIdButton.addEventListener('click', function() {
+    		// GET NEARIT PROFILEID
     		NearIT.getProfileId({
-			callback: profileIdCallback
+			success: function(profileId) {
+				// SUCCESS: YOU GOT THE PROFILEID
+				console.log(profileId);
+			},
+			error: function(e) {
+				// ERROR: FAILED FETCHING PROFILEID
+				console.log(e);
+			}
 		});
     });
     
-    resetProfileIdButton.addEventListener('click', function(e) {
+    resetProfileIdButton.addEventListener('click', function() {
     		NearIT.resetProfileId({
-    			callback: profileIdCallback
+    			success: function(newProfileId) {
+    				console.log(newProfileId);
+    			},
+    			error: function(e) {
+    				console.log(e);
+    			}
     		});
     });
     
-    setProfileIdButton.addEventListener('click', function(e) {
-    		NearIT.setProfileId("6e661aee-816d-46b9-866e-14f666fbc546");
+    setProfileIdButton.addEventListener('click', function() {
+    		// SET A NEW PROFILEID (it must be a UUID 8-4-4-4-12)
+    		NearIT.setProfileId('6e661aee-816d-46b9-866e-14f666fbc546');
     });
     
-    optOutButton.addEventListener('click', function(e) {
+    optOutButton.addEventListener('click', function() {
+    		// OPT-OUT FROM NEARIT (WARNING: NearIT won't work anymore on this device)
     		NearIT.optOut({
     			success: function(message) {
     				console.log(message);
@@ -199,14 +307,16 @@ function createTabProfiling() {
     		});
     });
     
-    singleDataButton.addEventListener('click', function(e) {
+    singleDataButton.addEventListener('click', function() {
+    		// SET A NEW PAIR <key, value> FOR THE USER
     		NearIT.setUserData({
-			key: "chiave",
-			value: "valore"
+			key: "key",
+			value: "value"
     		});
     });
     
-    multiDataButton.addEventListener('click', function(e) {
+    multiDataButton.addEventListener('click', function() {
+    		// SET A NEW MULTICHOICE USER DATA
 		NearIT.setMultiChoiceUserData({
 			key: "interests",
 			values: { "food": true, "drink": true, "exercise": false }
@@ -221,15 +331,41 @@ function createTabProfiling() {
     win.add(multiDataButton);
 
     var tab = Ti.UI.createTab({
-        title: "User Profiling",
+        icon: "/assets/images/who_icon.png",
+        activeIconIsMask: true, 
+    		iconIsMask: false,
+    		titleColor: "#fff",
+    		activeTitleColor: "#fff",
+    		title: "User Profiling",
         window: win
     });
 
     return tab;
 }
 
-function profileIdCallback(profileId) {
-	console.log(profileId);
+function handleLocationPermission() {
+	var hasAlwaysPermission = Ti.Geolocation.hasLocationPermissions(Ti.Geolocation.AUTHORIZATION_ALWAYS);
+	var hasWhenInUsePermission = Ti.Geolocation.hasLocationPermissions(Ti.Geolocation.AUTHORIZATION_WHEN_IN_USE);
+	var hasDeniedPermission = Ti.Geolocation.hasLocationPermissions(Ti.Geolocation.AUTHORIZATION_DENIED);
+	
+	if (hasAlwaysPermission) {
+		// Optimal place to call NearIT.startRadar()
+		NearIT.startRadar();
+	} else if (hasWhenInUsePermission) {
+		// Still a good place to call NearIT.startRadar()
+		NearIT.startRadar();
+	} else {
+		// Should ask for permission
+		Ti.Geolocation.requestLocationPermissions(Ti.Geolocation.AUTHORIZATION_ALWAYS, function(e) {
+			if (e.success) {
+				// OPTIMAL PLACE TO CALL NearIT.startRadar()
+				NearIT.startRadar();
+			} else {
+				// DO NOT start NearIT radar
+				console.log(e);
+			}
+		});
+	}
 }
 
 // added during app creation. this will automatically login to
@@ -255,13 +391,13 @@ ACS.Users.login({
 	password:password,
 }, function(result){
 	if (env==='development') {
-		Ti.API.info('ACS Login Results for environment `'+env+'`:');
-		Ti.API.info(result);
+		// Ti.API.info('ACS Login Results for environment `'+env+'`:');
+		// Ti.API.info(result);
 	}
 	if (result && result.success && result.users && result.users.length){
-		Ti.App.fireEvent('login.success',result.users[0],env);
+		// Ti.App.fireEvent('login.success',result.users[0],env);
 	} else {
-		Ti.App.fireEvent('login.failed',result,env);
+		// Ti.App.fireEvent('login.failed',result,env);
 	}
 });
 

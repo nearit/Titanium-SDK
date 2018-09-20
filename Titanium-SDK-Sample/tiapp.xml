@@ -46,7 +46,7 @@
         <key>NSLocationWhenInUseUsageDescription</key>
         <string>Location access 'Always' is required for Geofences and Beacons to work</string>
         <key>NearIT API Key</key>
-        <string>eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlYTIxYzNmMTVjZGQ0YzY1YjAyNjMzZTM1MGY0MzUxNyIsImlhdCI6MTQ5NjkzMjc5NCwiZXhwIjoxNjIzMTk2Nzk5LCJkYXRhIjp7ImFjY291bnQiOnsiaWQiOiJjZTZmMWFlZS04MTJkLTRmYjktOGE2ZS0xNGZiZGVmYmM1NDYiLCJyb2xlX2tleSI6ImFwcCJ9fX0.4ERuwTvmg9sF_SKfIVpzm53ZFdcahxA0jU8mVNsDrL4</string>
+        <string>REPLACE.THIS--Your.API.Key</string>
         <key>CFBundleURLTypes</key>
         <array>
           <dict>
@@ -54,7 +54,7 @@
             <string>Editor</string>
             <key>CFBundleURLSchemes</key>
             <array>
-              <string>nearce6f1aee812d4fb98a6e14fbdefbc546</string>
+              <string>REPLACE.THIS--Your.URL.Scheme</string>
             </array>
           </dict>
         </array>
