@@ -331,8 +331,10 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
                             EVENT_TRACKING_INFO: (trackingInfoB64 ? trackingInfoB64 : [NSNull null])
                             };
     
-    // TODO: send event through Titanium events ??
-    //[self sendEventWithName:NEARIT_NATIVE_EVENTS_TOPIC body:event];
+    if ([self _hasListeners:NEARIT_NATIVE_EVENTS_TOPIC]) {
+        NSLog(@"firing event from native..");
+        [self fireEvent:NEARIT_NATIVE_EVENTS_TOPIC withObject:event];
+    }
 }
 
 
