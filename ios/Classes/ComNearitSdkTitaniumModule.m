@@ -121,8 +121,6 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
             message = @"";
         }
         
-        NITLogI(TAG, @"simple message \"%@\" with trackingInfo %@", message, trackingInfo);
-        
         NSDictionary* eventContent = @{
                                        EVENT_CONTENT_MESSAGE: message
                                        };
@@ -135,7 +133,6 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
     } else if ([content isKindOfClass:[NITContent class]]) {
         // Notification with Content
         NITContent *nearContent = (NITContent*)content;
-        NITLogI(TAG, @"Content %@ trackingInfo %@", nearContent, trackingInfo);
         
         NSString* message = [nearContent notificationMessage];
         if (!message) {
@@ -183,7 +180,6 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
     } else if ([content isKindOfClass:[NITFeedback class]]) {
         // Feedback
         NITFeedback* feedback = (NITFeedback*)content;
-        NITLogI(TAG, @"Feedback %@ trackingInfo %@", feedback, trackingInfo);
         
         NSString* message = [feedback notificationMessage];
         if (!message) {
@@ -208,7 +204,6 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
     } else if ([content isKindOfClass:[NITCoupon class]]) {
         // Coupon notification
         NITCoupon *coupon = (NITCoupon*)content;
-        NITLogI(TAG, @"Coupon %@ trackingInfo %@", coupon, trackingInfo);
         
         NSString* message = [coupon notificationMessage];
         if (!message) {
@@ -229,7 +224,6 @@ NSString* const E_OPT_OUT_ERROR = @"E_OPT_OUT_ERROR";
     } else if ([content isKindOfClass:[NITCustomJSON class]]) {
         // Custom JSON notification
         NITCustomJSON *custom = (NITCustomJSON*)content;
-        NITLogI(TAG, @"JSON message %@ trackingInfo %@", [custom content], trackingInfo);
         
         NSString* message = [custom notificationMessage];
         if (!message) {
