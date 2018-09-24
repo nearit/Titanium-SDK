@@ -40,11 +40,11 @@
         <key>UIStatusBarStyle</key>
         <string>UIStatusBarStyleDefault</string>
         <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-        <string>Location access 'Always' is required for Geofences and Beacons to work</string>
-        <key>NSLocationAlwaysUsageDescription</key>
-        <string>Location access 'Always' is required for Geofences and Beacons to work</string>
-        <key>NSLocationWhenInUseUsageDescription</key>
-        <string>Location access 'Always' is required for Geofences and Beacons to work</string>
+	    <string>REPLACE.THIS--YOUR MESSAGE FOR 'Always' AND 'WhenInUse' PERMISSION</string>
+	    <key>NSLocationAlwaysUsageDescription</key>
+	    <string>REPLACE.THIS--YOUR MESSAGE FOR 'Always' PERMISSION</string>
+	    <key>NSLocationWhenInUseUsageDescription</key>
+	    <string>REPLACE.THIS--YOUR MESSAGE FOR 'WhenInUse' PERMISSION</string>
         <key>NearIT API Key</key>
         <string>REPLACE.THIS--Your.API.Key</string>
         <key>CFBundleURLTypes</key>
@@ -69,11 +69,7 @@
   <android 
     xmlns:android="http://schemas.android.com/apk/res/android"/>
     <modules>
-      <module platform="commonjs">ti.cloud</module>
       <module platform="iphone">com.nearit.sdk.titanium</module>
-      <module platform="windows">hyperloop</module>
-      <module platform="android">hyperloop</module>
-      <module platform="iphone">hyperloop</module>
     </modules>
     <deployment-targets>
       <target device="android">false</target>
@@ -82,20 +78,4 @@
     </deployment-targets>
     <sdk-version>7.3.0.GA</sdk-version>
     <property name="appc-app-id" type="string">5ba0bcafa666b4755ddd22cf</property>
-    <property name="acs-authbase-url-development" type="string">https://secure-identity.cloud.appcelerator.com</property>
-    <property name="acs-base-url-development" type="string">https://api.cloud.appcelerator.com</property>
-    <property name="acs-oauth-secret-development" type="string">nw74PQCruThBEAxZVWMKX9u6uDzGboYT</property>
-    <property name="acs-oauth-key-development" type="string">oytsf9ypKGZGvy1dZwlyeSBgYuB2PGgT</property>
-    <property name="acs-api-key-development" type="string">fYW0V1uvRvJ8NNqHeDjpYorQTSML9kyU</property>
-    <property name="acs-username-development" type="string">appc_app_user_dev</property>
-    <property name="acs-password-development" type="string">W8vvcjIHTjNbT8BDaC</property>
-    <property name="acs-authbase-url-production" type="string">https://secure-identity.cloud.appcelerator.com</property>
-    <property name="acs-base-url-production" type="string">https://api.cloud.appcelerator.com</property>
-    <property name="acs-oauth-secret-production" type="string">f73yiA9tiZFZBI3qYqgqakpmDxj1VXjt</property>
-    <property name="acs-oauth-key-production" type="string">I7kOEwjWrTuY4Pm552ESWICczIyDY2Gg</property>
-    <property name="acs-api-key-production" type="string">lBoPvj57n8u5C8akZbFpg2ZMeZEp2cPO</property>
-    <property name="acs-username-production" type="string">appc_app_user</property>
-    <property name="acs-password-production" type="string">Z2xP2u39ksAup6hIRb</property>
-    <property name="appc-org-id" type="string">88893355897037</property>
-    <property name="appc-creator-user-id" type="string">6ac01d6d-895a-42bb-b3eb-1d1edb7110a0</property>
   </ti:app>
