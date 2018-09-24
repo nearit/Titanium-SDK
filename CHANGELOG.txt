@@ -1,0 +1,17 @@
+1.0.0-rc1 - 09-24-2018
+
+Features:
+* Added core features:
+	- base installation
+	- push notifications
+	- location based notifications
+	- in-app events
+	- profileId related features
+	- user profiling via user data
+	- opt-out
+	- content handling and serialization for js
+	- coupon history
+* Added a sample
+
+Known issues:
+* With Titanium SDK < 7.3.0 `Auto update` and `Test devices` won't work
