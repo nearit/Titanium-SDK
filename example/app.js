@@ -1,25 +1,17 @@
-// This is a test harness for your module
-// You should do something interesting in this harness
-// to test out the module and to provide instructions
-// to users on how to use it by example.
+/**
+ * This is intended as APIs showcase only. For a sample app, have a look at the Titanium-SDK-Sample included in this repo.
+ */
 
-// open a single window
-var win = Ti.UI.createWindow({
-	backgroundColor:'white'
-});
-var label = Ti.UI.createLabel();
-win.add(label);
-win.open();
-
-// TODO: write your module tests here
+/*
+ * Import
+ */
 var NearIT = require('com.nearit.sdk.titanium');
-Ti.API.info("module is => " + NearIT);
 
 
 /*
- * NearIT radar
+ * NearIT radar start/stop
+ * WARNING: you should start radar only when the user already granted location permission
  */
-
 NearIT.startRadar();
 NearIT.stopRadar();
 
@@ -27,14 +19,12 @@ NearIT.stopRadar();
 /*
  * In-app-events
  */
-
 NearIT.triggerInAppEvent("in_app_event_test");
 
 
 /*
  * Listen for content
  */
-
 NearIT.addEventListener(NearIT.NEARIT_EVENTS, function(event) {
 	var message = event.content.message;
 	var trackingInfo = event.trackingInfo;
@@ -60,11 +50,24 @@ NearIT.addEventListener(NearIT.NEARIT_EVENTS, function(event) {
 	}
 });
 
+/*
+ * Coupon history
+ */
+NearIT.getCoupons({
+	success: function(coupons) {
+		// SUCCESS: you got coupon list (as json array)
+		console.log(coupons);
+	},
+	error: function(error) {
+		// ERROR: failed fetching coupons
+		console.log(error);
+	}
+});
+
 
 /*
  * Send Feedback
  */
-
 var rating = 5;
 var comment = "titanium comment"; // Optional
 NearIT.sendFeedback({
@@ -76,7 +79,7 @@ NearIT.sendFeedback({
 		console.log("successfully sent feedback");
 	},
 	error: function(error) {
-		// ERROR: FAILED SENDING FEEDBACK
+		// ERROR: Failed sending feedback
 		console.log(error);
 	}
 });
@@ -85,7 +88,6 @@ NearIT.sendFeedback({
 /*
  * User profiling and opt-out
  */
-
 NearIT.getProfileId({
 	success: function(profileId) {
 		// SUCCESS: you got the profileId
@@ -142,7 +144,6 @@ NearIT.setMultiChoiceUserData({
  * 	NearIT.RECIPE_CTA_TAPPED
  * 	or any string you want to use as custom tracking
  */
-
 NearIT.sendTracking({
 	trackingInfo: trackingInfo,
 	status: NearIT.RECIPE_RECEIVED,
