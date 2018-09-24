@@ -123,8 +123,9 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 
 // MARK: INTERNAL NearIT Recipes handling
 
-- (BOOL)handleNearITContent: (id _Nonnull) content trackingInfo: (NITTrackingInfo* _Nullable) trackingInfo
+- (BOOL)handleNearITContent: (NITReactionBundle* _Nonnull) content trackingInfo: (NITTrackingInfo* _Nullable) trackingInfo
 {
+    NSLog(NSStringFromClass([content class]))
     if ([content isKindOfClass:[NITSimpleNotification class]]) {
         // Simple notification
         NITSimpleNotification *simple = (NITSimpleNotification*)content;
@@ -327,6 +328,8 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     if ([self _hasListeners:NEARIT_NATIVE_EVENTS_TOPIC]) {
         NSLog(@"firing event from native..");
         [self fireEvent:NEARIT_NATIVE_EVENTS_TOPIC withObject:event];
+    } else {
+        NSLog(@"no listeners")
     }
 }
 
@@ -567,7 +570,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 
 - (void)manager:(NITManager * _Nonnull)manager eventWithContent:(id _Nonnull)content trackingInfo:(NITTrackingInfo * _Nonnull)trackingInfo {
     NSLog(@"eventwithcontent")
-    //[self handleNearITContent:content trackingInfo:trackingInfo];
+    [self handleNearITContent:content trackingInfo:trackingInfo];
 }
 
 #pragma UNUserNotificationCenter Delegate
