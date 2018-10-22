@@ -198,7 +198,17 @@ function createTab1() {
     });
     
     getNotificationHistory.addEventListener('click', function() {
-    		
+    		// GET NEARIT NOTIFICATION HISTORY
+    		NearIT.getNotificationHistory({
+    			success: function(items) {
+    				// SUCCESS: YOU GOT NOTIFICATION HISTORY
+    				console.log(items);
+    			},
+    			error: function(error) {
+    				// ERROR: FAILED FETCHING NOTIFICATION HISTORY
+	    			console.log(error);
+    			}
+    		});
     });
 
     win.add(requestLocation);
