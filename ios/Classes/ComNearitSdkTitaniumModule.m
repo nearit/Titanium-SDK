@@ -334,20 +334,28 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
              };
 }
 
-// MARK: INTERNAL NearIT content delivered through events
-
-- (void) sendEventWithContent:(NSDictionary* _Nonnull) content NITEventType:(NSString* _Nonnull) eventType trackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
+- (NSString*)bundleTrackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
 {
-    NSString* trackingInfoB64;
+	NSString* trackingInfoB64;
     if (trackingInfo) {
         NSData* trackingInfoData = [NSKeyedArchiver archivedDataWithRootObject:trackingInfo];
         trackingInfoB64 = [trackingInfoData base64EncodedStringWithOptions:0];
     }
     
+    return trackingInfoB64;
+}
+
+// MARK: INTERNAL NearIT content delivered through events
+
+- (void) sendEventWithContent:(NSDictionary* _Nonnull) content NITEventType:(NSString* _Nonnull) eventType trackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
+{
+    
+    NSString* bundledTrackingInfo = [self bundleTrackingInfo:trackingInfo];
+    
     NSDictionary* event = @{
                             EVENT_TYPE: eventType,
                             EVENT_CONTENT: content,
-                            EVENT_TRACKING_INFO: (trackingInfoB64 ? trackingInfoB64 : [NSNull null])
+                            EVENT_TRACKING_INFO: (bundledTrackingInfo ? bundledTrackingInfo : [NSNull null])
                             };
     
     if ([self _hasListeners:NEARIT_NATIVE_EVENTS_TOPIC]) {
