@@ -148,44 +148,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Notification with Content
         NITContent *nearContent = (NITContent*)content;
         
-        NSString* message = [nearContent notificationMessage];
-        if (!message) {
-            message = @"";
-        }
-        
-        NSString* title = [nearContent title];
-        if (!title) {
-            title = @"";
-        }
-        
-        NSString* text = [nearContent content];
-        if (!text) {
-            text = @"";
-        }
-        
-        id image;
-        if (nearContent.image) {
-            image = [self bundleNITImage:nearContent.image];
-        } else {
-            image = [NSNull null];
-        }
-        
-        id cta;
-        if (nearContent.link) {
-            cta = [self bundleNITContentLink:nearContent.link];
-        } else {
-            cta = [NSNull null];
-        }
-        
-        NSDictionary* eventContent = @{
-                                       EVENT_CONTENT_MESSAGE:message,
-                                       EVENT_CONTENT_TITLE:title,
-                                       EVENT_CONTENT_TEXT:text,
-                                       EVENT_CONTENT_IMAGE:image,
-                                       EVENT_CONTENT_CTA:cta
-                                       };
-        
-        [self sendEventWithContent:eventContent
+        [self sendEventWithContent:[self bundleNITContent:nearContent]
                       NITEventType:EVENT_TYPE_CONTENT
                       trackingInfo:trackingInfo];
         
@@ -195,21 +158,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Feedback
         NITFeedback* feedback = (NITFeedback*)content;
         
-        NSString* message = [feedback notificationMessage];
-        if (!message) {
-            message = @"";
-        }
-        
-        NSData* feedbackData = [NSKeyedArchiver archivedDataWithRootObject:feedback];
-        NSString* feedbackB64 = [feedbackData base64EncodedStringWithOptions:0];
-        
-        NSDictionary* eventContent = @{
-                                       EVENT_CONTENT_MESSAGE: message,
-                                       EVENT_CONTENT_FEEDBACK: feedbackB64,
-                                       EVENT_CONTENT_QUESTION: [feedback question]
-                                       };
-        
-        [self sendEventWithContent:eventContent
+        [self sendEventWithContent:[self bundleNITFeedback:feedback]
                       NITEventType:EVENT_TYPE_FEEDBACK
                       trackingInfo:trackingInfo];
         
@@ -239,17 +188,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Custom JSON notification
         NITCustomJSON *custom = (NITCustomJSON*)content;
         
-        NSString* message = [custom notificationMessage];
-        if (!message) {
-            message = @"";
-        }
-        
-        NSDictionary* eventContent = @{
-                                       EVENT_CONTENT_MESSAGE: message,
-                                       EVENT_CONTENT_DATA: [custom content]
-                                       };
-        
-        [self sendEventWithContent:eventContent
+        [self sendEventWithContent:[self bundleNITCustomJSON:custom]
                       NITEventType:EVENT_TYPE_CUSTOM_JSON
                       trackingInfo:trackingInfo];
         
