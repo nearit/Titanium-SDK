@@ -130,16 +130,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Simple notification
         NITSimpleNotification *simple = (NITSimpleNotification*)content;
         
-        NSString* message = [simple notificationMessage];
-        if (!message) {
-            message = @"";
-        }
-        
-        NSDictionary* eventContent = @{
-                                       EVENT_CONTENT_MESSAGE: message
-                                       };
-        
-        [self sendEventWithContent:eventContent
+        [self sendEventWithContent:[self bundleNITSimple:simple]
                       NITEventType:EVENT_TYPE_SIMPLE
                       trackingInfo:trackingInfo];
         
@@ -242,7 +233,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	return historyDictionary;
 }
 
-- (NSDictionary*)bundleNITSimple:(NITSimple * _Nonnull) simple
+- (NSDictionary*)bundleNITSimple:(NITSimpleNotification * _Nonnull) simple
 {
 	NSString* message = [simple notificationMessage];
     if (!message) {
