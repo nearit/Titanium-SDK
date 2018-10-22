@@ -303,6 +303,79 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	return historyDictionary;
 }
 
+- (NSDictionary*)bundleNITContent:(NITContent * _Nonnull) content
+{
+	NSString* message = [content notificationMessage];
+    if (!message) {
+        message = @"";
+    }
+	
+	NSString* title = [content title];
+    if (!title) {
+        title = @"";
+    }
+    
+    NSString* text = [content content];
+    if (!text) {
+        text = @"";
+    }
+    
+    id image;
+    if (content.image) {
+        image = [self bundleNITImage:content.image];
+    } else {
+        image = [NSNull null];
+    }
+    
+    id cta;
+    if (content.link) {
+        cta = [self bundleNITContentLink:content.link];
+    } else {
+        cta = [NSNull null];
+    }
+    
+    NSDictionary* bundledContent = @{
+					EVENT_CONTENT_MESSAGE:message,
+					EVENT_CONTENT_TITLE:title,
+					EVENT_CONTENT_TEXT:text,
+					EVENT_CONTENT_IMAGE:image,
+					EVENT_CONTENT_CTA:cta};
+                                   
+  	return bundledContent;
+}
+
+- (NSDictionary*)bundleNITFeedback:(NITFeedback * _Nonnull) feedback
+{
+	NSString* message = [feedback notificationMessage];
+    if (!message) {
+        message = @"";
+    }
+    
+    NSData* feedbackData = [NSKeyedArchiver archivedDataWithRootObject:feedback];
+    NSString* feedbackB64 = [feedbackData base64EncodedStringWithOptions:0];
+    
+    NSDictionary* bundledFeedback = @{
+    					EVENT_CONTENT_MESSAGE: message,
+                    	EVENT_CONTENT_FEEDBACK: feedbackB64,
+                    	EVENT_CONTENT_QUESTION: [feedback question]};
+                    
+   	return bundledFeedback;
+}
+
+- (NSDictionary*)bundleNITCustomJSON:(NITCustomJSON* _Nonnull) custom
+{
+	NSString* message = [custom notificationMessage];
+    if (!message) {
+        message = @"";
+    }
+    
+    NSDictionary* customJson = @{
+                       EVENT_CONTENT_MESSAGE: message,
+                       EVENT_CONTENT_DATA: [custom content]};
+
+	return customJson;
+}
+
 - (NSDictionary*)bundleNITImage:(NITImage* _Nonnull) image
 {
     return @{
