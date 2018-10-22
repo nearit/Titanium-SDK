@@ -242,6 +242,19 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	return historyDictionary;
 }
 
+- (NSDictionary*)bundleNITSimple:(NITSimple * _Nonnull) simple
+{
+	NSString* message = [simple notificationMessage];
+    if (!message) {
+        message = @"";
+    }
+    
+    NSDictionary* bundledSimple = @{
+					EVENT_CONTENT_MESSAGE: message};
+	
+	return bundledSimple;
+}
+
 - (NSDictionary*)bundleNITContent:(NITContent * _Nonnull) content
 {
 	NSString* message = [content notificationMessage];
