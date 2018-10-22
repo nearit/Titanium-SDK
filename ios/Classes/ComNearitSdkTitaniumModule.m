@@ -294,6 +294,15 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     return couponDictionary;
 }
 
+- (NSDictionary*)bundleNITHistoryItem:(NITHistoryItem* _Nonnull) item
+{
+	NSMutableDictionary* historyDictionary = [[NSMutableDictionary alloc] init];
+	[historyDictionary setObject:(item.read) forKey:@"read"];
+	[historyDictionary setObject:(item.timestamp) forKey:@"timestamp"];
+	[historyDictionary setObject:(item.date) forKey:@"date"];
+	return historyDictionary;
+}
+
 - (NSDictionary*)bundleNITImage:(NITImage* _Nonnull) image
 {
     return @{
@@ -371,6 +380,33 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
                 [errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
             }
         }
+    }];
+}
+
+
+// MARK: NearIT Notification history
+
+- (void)getNotificationHistory:(id)args
+{
+	ENSURE_SINGLE_ARG(args,NSDictionary);
+	KrollCallback* errorCallback = [args objectForKey:@"error"];
+    KrollCallback* successCallback = [args objectForKey:@"success"];
+    
+    NSMutableArray *bundledNotificationHistory = [[NSMutableArray alloc] init];
+    
+    [[NITManager defaultManager] historyWithCompletion:^(NSArray<NITHistoryItem *> * _Nullable items, NSError * _Nullable error) {
+    		if (!error) {
+    			if (successCallback) {
+    				for (NITHistoryItem *item in items) {
+    					[bundledNotificationHistory addObject:[self bundleNITHistoryItem:item]];
+    				}
+    				[successCallback call: bundledNotificationHistory thisObject:nil];
+    			}
+    		} else {
+    			if (errorCallback) {
+    				[errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
+    			}
+    		}
     }];
 }
 
