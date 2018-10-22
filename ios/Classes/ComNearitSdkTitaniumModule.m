@@ -227,9 +227,54 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 - (NSDictionary*)bundleNITHistoryItem:(NITHistoryItem* _Nonnull) item
 {
 	NSMutableDictionary* historyDictionary = [[NSMutableDictionary alloc] init];
-	[historyDictionary setObject:(item.read) forKey:@"read"];
-	[historyDictionary setObject:(item.timestamp) forKey:@"timestamp"];
-	[historyDictionary setObject:(item.date) forKey:@"date"];
+	
+	NSNumber *read = [NSNumber numberWithBool:item.read];
+	NSNumber *timestamp = [NSNumber numberWithDouble:item.timestamp];
+	NSString *bundledTrackingInfo = [self bundleTrackingInfo:item.trackingInfo];
+	
+	[historyDictionary setObject:read forKey:@"read"];
+	[historyDictionary setObject:timestamp forKey:@"timestamp"];
+	[historyDictionary setObject:(item.reactionBundle.notificationMessage) forKey:@"notificationMessage"];
+	[historyDictionary setObject:(bundledTrackingInfo ? bundledTrackingInfo : [NSNull null]) forKey:@"trackingInfo"];
+	
+	if ([item.reactionBundle isKindOfClass:[NITSimpleNotification class]]) {
+	
+		[historyDictionary setObject:EVENT_TYPE_SIMPLE forKey:@"type"];
+		
+		NITSimpleNotification *nearSimple = (NITSimpleNotification*)item.reactionBundle;
+		NSDictionary* content = [self bundleNITSimple:nearSimple];
+		[historyDictionary setObject:content forKey:@"notificationContent"];
+		
+	} else if ([item.reactionBundle isKindOfClass:[NITContent class]]) {
+		
+		[historyDictionary setObject:EVENT_TYPE_CONTENT forKey:@"type"];
+		
+		NITContent *nearContent = (NITContent*)item.reactionBundle;
+		NSDictionary* content = [self bundleNITContent:nearContent];
+		[historyDictionary setObject:content forKey:@"notificationContent"];
+		
+	} else if ([item.reactionBundle isKindOfClass:[NITFeedback class]]) {
+	
+		[historyDictionary setObject:EVENT_TYPE_FEEDBACK forKey:@"type"];
+		
+		NITFeedback* nearFeedback = (NITFeedback*)item.reactionBundle;
+		NSDictionary* feedback = [self bundleNITFeedback:nearFeedback];
+		[historyDictionary setObject:feedback forKey:@"notificationContent"];
+		
+	} else if ([item.reactionBundle isKindOfClass:[NITCoupon class]]) {
+	
+		[historyDictionary setObject:EVENT_TYPE_COUPON forKey:@"type"];
+		
+		
+	} else if ([item.reactionBundle isKindOfClass:[NITCustomJSON class]]) {
+	
+		[historyDictionary setObject:EVENT_TYPE_CUSTOM_JSON forKey:@"type"];
+		
+		NITCustomJSON *nearCustom = (NITCustomJSON*)item.reactionBundle;
+		NSDictionary* custom = [self bundleNITCustomJSON:nearCustom];
+		[historyDictionary setObject:custom forKey:@"notificationContent"];
+	}
+	
 	return historyDictionary;
 }
 
