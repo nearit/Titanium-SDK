@@ -1,3 +1,16 @@
+1.1.0-rc1 - 10-23-2018
+
+Features:
+* Added notification history feature
+
+Fixes:
+* Fixed coupon history
+
+Known issues:
+* With Titanium SDK < 7.3.0 `Auto update` and `Test devices` won't work
+
+________________________________________________
+
 1.0.0-rc1 - 09-24-2018
 
 Features:
