@@ -130,16 +130,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Simple notification
         NITSimpleNotification *simple = (NITSimpleNotification*)content;
         
-        NSString* message = [simple notificationMessage];
-        if (!message) {
-            message = @"";
-        }
-        
-        NSDictionary* eventContent = @{
-                                       EVENT_CONTENT_MESSAGE: message
-                                       };
-        
-        [self sendEventWithContent:eventContent
+        [self sendEventWithContent:[self bundleNITSimple:simple]
                       NITEventType:EVENT_TYPE_SIMPLE
                       trackingInfo:trackingInfo];
         
@@ -148,44 +139,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Notification with Content
         NITContent *nearContent = (NITContent*)content;
         
-        NSString* message = [nearContent notificationMessage];
-        if (!message) {
-            message = @"";
-        }
-        
-        NSString* title = [nearContent title];
-        if (!title) {
-            title = @"";
-        }
-        
-        NSString* text = [nearContent content];
-        if (!text) {
-            text = @"";
-        }
-        
-        id image;
-        if (nearContent.image) {
-            image = [self bundleNITImage:nearContent.image];
-        } else {
-            image = [NSNull null];
-        }
-        
-        id cta;
-        if (nearContent.link) {
-            cta = [self bundleNITContentLink:nearContent.link];
-        } else {
-            cta = [NSNull null];
-        }
-        
-        NSDictionary* eventContent = @{
-                                       EVENT_CONTENT_MESSAGE:message,
-                                       EVENT_CONTENT_TITLE:title,
-                                       EVENT_CONTENT_TEXT:text,
-                                       EVENT_CONTENT_IMAGE:image,
-                                       EVENT_CONTENT_CTA:cta
-                                       };
-        
-        [self sendEventWithContent:eventContent
+        [self sendEventWithContent:[self bundleNITContent:nearContent]
                       NITEventType:EVENT_TYPE_CONTENT
                       trackingInfo:trackingInfo];
         
@@ -195,21 +149,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Feedback
         NITFeedback* feedback = (NITFeedback*)content;
         
-        NSString* message = [feedback notificationMessage];
-        if (!message) {
-            message = @"";
-        }
-        
-        NSData* feedbackData = [NSKeyedArchiver archivedDataWithRootObject:feedback];
-        NSString* feedbackB64 = [feedbackData base64EncodedStringWithOptions:0];
-        
-        NSDictionary* eventContent = @{
-                                       EVENT_CONTENT_MESSAGE: message,
-                                       EVENT_CONTENT_FEEDBACK: feedbackB64,
-                                       EVENT_CONTENT_QUESTION: [feedback question]
-                                       };
-        
-        [self sendEventWithContent:eventContent
+        [self sendEventWithContent:[self bundleNITFeedback:feedback]
                       NITEventType:EVENT_TYPE_FEEDBACK
                       trackingInfo:trackingInfo];
         
@@ -239,17 +179,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Custom JSON notification
         NITCustomJSON *custom = (NITCustomJSON*)content;
         
-        NSString* message = [custom notificationMessage];
-        if (!message) {
-            message = @"";
-        }
-        
-        NSDictionary* eventContent = @{
-                                       EVENT_CONTENT_MESSAGE: message,
-                                       EVENT_CONTENT_DATA: [custom content]
-                                       };
-        
-        [self sendEventWithContent:eventContent
+        [self sendEventWithContent:[self bundleNITCustomJSON:custom]
                       NITEventType:EVENT_TYPE_CUSTOM_JSON
                       trackingInfo:trackingInfo];
         
@@ -294,6 +224,146 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     return couponDictionary;
 }
 
+- (NSDictionary*)bundleNITHistoryItem:(NITHistoryItem* _Nonnull) item
+{
+	NSMutableDictionary* historyDictionary = [[NSMutableDictionary alloc] init];
+	
+	NSNumber *read = [NSNumber numberWithBool:item.read];
+	NSNumber *timestamp = [NSNumber numberWithDouble:item.timestamp];
+	NSString *bundledTrackingInfo = [self bundleTrackingInfo:item.trackingInfo];
+	
+	[historyDictionary setObject:read forKey:@"read"];
+	[historyDictionary setObject:timestamp forKey:@"timestamp"];
+	[historyDictionary setObject:(item.reactionBundle.notificationMessage) forKey:@"notificationMessage"];
+	[historyDictionary setObject:(bundledTrackingInfo ? bundledTrackingInfo : [NSNull null]) forKey:@"trackingInfo"];
+	
+	if ([item.reactionBundle isKindOfClass:[NITSimpleNotification class]]) {
+	
+		[historyDictionary setObject:EVENT_TYPE_SIMPLE forKey:@"type"];
+		
+		NITSimpleNotification *nearSimple = (NITSimpleNotification*)item.reactionBundle;
+		NSDictionary* content = [self bundleNITSimple:nearSimple];
+		[historyDictionary setObject:content forKey:@"notificationContent"];
+		
+	} else if ([item.reactionBundle isKindOfClass:[NITContent class]]) {
+		
+		[historyDictionary setObject:EVENT_TYPE_CONTENT forKey:@"type"];
+		
+		NITContent *nearContent = (NITContent*)item.reactionBundle;
+		NSDictionary* content = [self bundleNITContent:nearContent];
+		[historyDictionary setObject:content forKey:@"notificationContent"];
+		
+	} else if ([item.reactionBundle isKindOfClass:[NITFeedback class]]) {
+	
+		[historyDictionary setObject:EVENT_TYPE_FEEDBACK forKey:@"type"];
+		
+		NITFeedback* nearFeedback = (NITFeedback*)item.reactionBundle;
+		NSDictionary* feedback = [self bundleNITFeedback:nearFeedback];
+		[historyDictionary setObject:feedback forKey:@"notificationContent"];
+		
+	} else if ([item.reactionBundle isKindOfClass:[NITCoupon class]]) {
+	
+		[historyDictionary setObject:EVENT_TYPE_COUPON forKey:@"type"];
+		
+		
+	} else if ([item.reactionBundle isKindOfClass:[NITCustomJSON class]]) {
+	
+		[historyDictionary setObject:EVENT_TYPE_CUSTOM_JSON forKey:@"type"];
+		
+		NITCustomJSON *nearCustom = (NITCustomJSON*)item.reactionBundle;
+		NSDictionary* custom = [self bundleNITCustomJSON:nearCustom];
+		[historyDictionary setObject:custom forKey:@"notificationContent"];
+	}
+	
+	return historyDictionary;
+}
+
+- (NSDictionary*)bundleNITSimple:(NITSimpleNotification * _Nonnull) simple
+{
+	NSString* message = [simple notificationMessage];
+    if (!message) {
+        message = @"";
+    }
+    
+    NSDictionary* bundledSimple = @{
+					EVENT_CONTENT_MESSAGE: message};
+	
+	return bundledSimple;
+}
+
+- (NSDictionary*)bundleNITContent:(NITContent * _Nonnull) content
+{
+	NSString* message = [content notificationMessage];
+    if (!message) {
+        message = @"";
+    }
+	
+	NSString* title = [content title];
+    if (!title) {
+        title = @"";
+    }
+    
+    NSString* text = [content content];
+    if (!text) {
+        text = @"";
+    }
+    
+    id image;
+    if (content.image) {
+        image = [self bundleNITImage:content.image];
+    } else {
+        image = [NSNull null];
+    }
+    
+    id cta;
+    if (content.link) {
+        cta = [self bundleNITContentLink:content.link];
+    } else {
+        cta = [NSNull null];
+    }
+    
+    NSDictionary* bundledContent = @{
+					EVENT_CONTENT_MESSAGE:message,
+					EVENT_CONTENT_TITLE:title,
+					EVENT_CONTENT_TEXT:text,
+					EVENT_CONTENT_IMAGE:image,
+					EVENT_CONTENT_CTA:cta};
+                                   
+  	return bundledContent;
+}
+
+- (NSDictionary*)bundleNITFeedback:(NITFeedback * _Nonnull) feedback
+{
+	NSString* message = [feedback notificationMessage];
+    if (!message) {
+        message = @"";
+    }
+    
+    NSData* feedbackData = [NSKeyedArchiver archivedDataWithRootObject:feedback];
+    NSString* feedbackB64 = [feedbackData base64EncodedStringWithOptions:0];
+    
+    NSDictionary* bundledFeedback = @{
+    					EVENT_CONTENT_MESSAGE: message,
+                    	EVENT_CONTENT_FEEDBACK: feedbackB64,
+                    	EVENT_CONTENT_QUESTION: [feedback question]};
+                    
+   	return bundledFeedback;
+}
+
+- (NSDictionary*)bundleNITCustomJSON:(NITCustomJSON* _Nonnull) custom
+{
+	NSString* message = [custom notificationMessage];
+    if (!message) {
+        message = @"";
+    }
+    
+    NSDictionary* customJson = @{
+                       EVENT_CONTENT_MESSAGE: message,
+                       EVENT_CONTENT_DATA: [custom content]};
+
+	return customJson;
+}
+
 - (NSDictionary*)bundleNITImage:(NITImage* _Nonnull) image
 {
     return @{
@@ -309,20 +379,28 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
              };
 }
 
-// MARK: INTERNAL NearIT content delivered through events
-
-- (void) sendEventWithContent:(NSDictionary* _Nonnull) content NITEventType:(NSString* _Nonnull) eventType trackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
+- (NSString*)bundleTrackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
 {
-    NSString* trackingInfoB64;
+	NSString* trackingInfoB64;
     if (trackingInfo) {
         NSData* trackingInfoData = [NSKeyedArchiver archivedDataWithRootObject:trackingInfo];
         trackingInfoB64 = [trackingInfoData base64EncodedStringWithOptions:0];
     }
     
+    return trackingInfoB64;
+}
+
+// MARK: INTERNAL NearIT content delivered through events
+
+- (void) sendEventWithContent:(NSDictionary* _Nonnull) content NITEventType:(NSString* _Nonnull) eventType trackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
+{
+    
+    NSString* bundledTrackingInfo = [self bundleTrackingInfo:trackingInfo];
+    
     NSDictionary* event = @{
                             EVENT_TYPE: eventType,
                             EVENT_CONTENT: content,
-                            EVENT_TRACKING_INFO: (trackingInfoB64 ? trackingInfoB64 : [NSNull null])
+                            EVENT_TRACKING_INFO: (bundledTrackingInfo ? bundledTrackingInfo : [NSNull null])
                             };
     
     if ([self _hasListeners:NEARIT_NATIVE_EVENTS_TOPIC]) {
@@ -364,13 +442,40 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
                 for(NITCoupon *c in coupons) {
                     [bundledCoupons addObject:[self bundleNITCoupon:c]];
                 }
-                [successCallback call:bundledCoupons thisObject:nil];
+                [successCallback call: @[@{ @"coupons" : bundledCoupons }] thisObject:nil];
             }
         } else {
             if (errorCallback) {
                 [errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
             }
         }
+    }];
+}
+
+
+// MARK: NearIT Notification history
+
+- (void)getNotificationHistory:(id)args
+{
+	ENSURE_SINGLE_ARG(args,NSDictionary);
+	KrollCallback* errorCallback = [args objectForKey:@"error"];
+    KrollCallback* successCallback = [args objectForKey:@"success"];
+    
+    NSMutableArray *bundledNotificationHistory = [[NSMutableArray alloc] init];
+    
+    [[NITManager defaultManager] historyWithCompletion:^(NSArray<NITHistoryItem *> * _Nullable items, NSError * _Nullable error) {
+    		if (!error) {
+    			if (successCallback) {
+    				for (NITHistoryItem *item in items) {
+    					[bundledNotificationHistory addObject:[self bundleNITHistoryItem:item]];
+    				}
+    				[successCallback call: @[@{ @"items" : bundledNotificationHistory }] thisObject:nil];
+    			}
+    		} else {
+    			if (errorCallback) {
+    				[errorCallback call:@[@{ @"error" : error.localizedDescription }] thisObject:nil];
+    			}
+    		}
     }];
 }
 

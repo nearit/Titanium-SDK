@@ -186,9 +186,12 @@ function createTab1() {
     getCoupons.addEventListener('click', function() {
     		// GET NEARIT COUPONS
     		NearIT.getCoupons({
-    			success: function(coupons) {
+    			success: function(result) {
     				// SUCCESS: YOU GOT COUPON LIST
-    				console.log(coupons);
+    				var coupons = result.coupons;
+    				for (var i = 0; i < coupons.length; i++) {
+    					console.log(coupons[i]);
+    				}
 	    		},
 	    		error: function(error) {
 	    			// ERROR: FAILED FETCHING COUPONS
@@ -198,7 +201,20 @@ function createTab1() {
     });
     
     getNotificationHistory.addEventListener('click', function() {
-    		
+    		// GET NEARIT NOTIFICATION HISTORY
+    		NearIT.getNotificationHistory({
+    			success: function(result) {
+    				// SUCCESS: YOU GOT NOTIFICATION HISTORY
+    				var notifications = result.items;
+    				for (var i = 0; i < notifications.length; i++) {
+    					console.log(notifications[i]);
+    				}
+    			},
+    			error: function(error) {
+    				// ERROR: FAILED FETCHING NOTIFICATION HISTORY
+	    			console.log(error);
+    			}
+    		});
     });
 
     win.add(requestLocation);
