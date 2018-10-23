@@ -3,6 +3,9 @@
 Features:
 * Added notification history feature
 
+Enhancements:
+* Faster local notification in iOS 10+
+
 Fixes:
 * Fixed coupon history
 
