@@ -54,12 +54,32 @@ NearIT.addEventListener(NearIT.NEARIT_EVENTS, function(event) {
  * Coupon history
  */
 NearIT.getCoupons({
-	success: function(coupons) {
+	success: function(result) {
 		// SUCCESS: you got coupon list (as json array)
-		console.log(coupons);
+		var coupons = result.items;
+		for (var i = 0; i < coupons.length; i++) {
+			console.log(coupons[i]);
+		}
 	},
 	error: function(error) {
 		// ERROR: failed fetching coupons
+		console.log(error);
+	}
+});
+
+/*
+ * Notification history
+ */
+NearIT.getNotificationHistory({
+	success: function(result) {
+		// SUCCESS: you got notification history (as json array)
+		var notifications = result.items;
+		for (var i = 0; i < notifications.length; i++) {
+			console.log(notifications[i]);
+		}
+	},
+	error: function(error) {
+		// ERROR: failed fetching notification history
 		console.log(error);
 	}
 });
