@@ -1,18 +1,22 @@
-# Titanium-SDK Module
+# NearIT Titanium SDK
 
-## Description
+NearIT allows to engage app users by sending **context-aware targeted content**.
 
-Official NearIT Titanium SDK.
+## Recipes
 
-## Accessing the Titanium-SDK Module
+NearIT allows to manage apps by defining *recipes*. Those are simple rules made of 3 ingredients:
+- **WHO**: define the target users
+- **WHAT**: define what action NearIT should do
+- **TRIGGER**: define when the action should be triggered
 
-To access this module from JavaScript, you would do the following:
+## How it works
 
-    var NearIT = require("com.nearit.sdk.titanium");
+[**NearIT web interface**](https://go.nearit.com/) allows you to configure all the features, in a snap.
+Once the settings are configured, **everyone** - even people without technical skills - can manage context-aware mobile contents.
 
-The NearIT variable is a reference to the Module object.
+**NearIT SDK** synchronize with servers and behave accordingly to the settings and the recipes. Any content will be delivered at the right time, you just need to handle its presentation.
 
-## Reference
+## Integration guide
 
-[Documentation](https://docs.nearit.com/titanium/installation/)
+For information on how to integrate all NearIT features in your app, follow the [integration guide](https://docs.nearit.com/titanium/installation/)
 
