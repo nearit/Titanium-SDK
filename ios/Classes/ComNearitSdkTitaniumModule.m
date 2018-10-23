@@ -442,7 +442,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
                 for(NITCoupon *c in coupons) {
                     [bundledCoupons addObject:[self bundleNITCoupon:c]];
                 }
-                [successCallback call:bundledCoupons thisObject:nil];
+                [successCallback call: @[@{ @"coupons" : bundledCoupons }] thisObject:nil];
             }
         } else {
             if (errorCallback) {
@@ -469,7 +469,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     				for (NITHistoryItem *item in items) {
     					[bundledNotificationHistory addObject:[self bundleNITHistoryItem:item]];
     				}
-    				[successCallback call: bundledNotificationHistory thisObject:nil];
+    				[successCallback call: @[@{ @"items" : bundledNotificationHistory }] thisObject:nil];
     			}
     		} else {
     			if (errorCallback) {
