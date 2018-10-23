@@ -1,81 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ti:app 
-  xmlns:ti="http://ti.appcelerator.org">
-  <id>com.nearit.sdk.titanium.sample</id>
-  <name>Titanium-SDK-Sample</name>
-  <version>1.0</version>
-  <publisher>federico.boschini</publisher>
-  <url>https://www.nearit.com</url>
-  <description>undefined</description>
-  <copyright>2018 by federico.boschini</copyright>
-  <icon>DefaultIcon.png</icon>
-  <fullscreen>false</fullscreen>
-  <navbar-hidden>false</navbar-hidden>
-  <analytics>true</analytics>
-  <guid>ba8d0127-c064-4eba-9bbb-074c5826fb79</guid>
-  <property name="ti.ui.defaultunit" type="string">dp</property>
-  <property name="run-on-main-thread" type="bool">true</property>
-  <ios>
-    <enable-launch-screen-storyboard>true</enable-launch-screen-storyboard>
-    <use-app-thinning>true</use-app-thinning>
-    <plist>
-      <dict>
-        <key>UISupportedInterfaceOrientations~iphone</key>
-        <array>
-          <string>UIInterfaceOrientationPortrait</string>
-        </array>
-        <key>UISupportedInterfaceOrientations~ipad</key>
-        <array>
-          <string>UIInterfaceOrientationPortrait</string>
-          <string>UIInterfaceOrientationPortraitUpsideDown</string>
-          <string>UIInterfaceOrientationLandscapeLeft</string>
-          <string>UIInterfaceOrientationLandscapeRight</string>
-        </array>
-        <key>UIRequiresPersistentWiFi</key>
-        <false/>
-        <key>UIPrerenderedIcon</key>
-        <false/>
-        <key>UIStatusBarHidden</key>
-        <false/>
-        <key>UIStatusBarStyle</key>
-        <string>UIStatusBarStyleDefault</string>
-        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	    <string>REPLACE.THIS--YOUR MESSAGE FOR 'Always' AND 'WhenInUse' PERMISSION</string>
-	    <key>NSLocationAlwaysUsageDescription</key>
-	    <string>REPLACE.THIS--YOUR MESSAGE FOR 'Always' PERMISSION</string>
-	    <key>NSLocationWhenInUseUsageDescription</key>
-	    <string>REPLACE.THIS--YOUR MESSAGE FOR 'WhenInUse' PERMISSION</string>
-        <key>NearIT API Key</key>
-        <string>REPLACE.THIS--Your.API.Key</string>
-        <key>CFBundleURLTypes</key>
-        <array>
-          <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-              <string>REPLACE.THIS--Your.URL.Scheme</string>
-            </array>
-          </dict>
-        </array>
-        <key>UIBackgroundModes</key>
-        <array>
-          <string>fetch</string>
-        </array>
-      </dict>
-    </plist>
-    <use-jscore-framework>true</use-jscore-framework>
-  </ios>
-  <android 
-    xmlns:android="http://schemas.android.com/apk/res/android"/>
+<ti:app xmlns:ti="http://ti.appcelerator.org">
+	<id>com.nearit.sdk.titanium.sample</id>
+	<name>Titanium-SDK-Sample</name>
+	<version>1.0</version>
+	<publisher>federico.boschini</publisher>
+	<url>https://www.nearit.com</url>
+	<description>undefined</description>
+	<copyright>2018 by federico.boschini</copyright>
+	<icon>DefaultIcon.png</icon>
+	<fullscreen>false</fullscreen>
+	<navbar-hidden>false</navbar-hidden>
+	<analytics>true</analytics>
+	<guid>ba8d0127-c064-4eba-9bbb-074c5826fb79</guid>
+	<property name="ti.ui.defaultunit" type="string">dp</property>
+	<property name="run-on-main-thread" type="bool">true</property>
+	<ios>
+	    <enable-launch-screen-storyboard>true</enable-launch-screen-storyboard>
+	    <use-app-thinning>true</use-app-thinning>
+	    <plist>
+	        <dict>
+	            <key>UISupportedInterfaceOrientations~iphone</key>
+	            <array>
+	                <string>UIInterfaceOrientationPortrait</string>
+	            </array>
+	            <key>UISupportedInterfaceOrientations~ipad</key>
+	            <array>
+	                <string>UIInterfaceOrientationPortrait</string>
+	                <string>UIInterfaceOrientationPortraitUpsideDown</string>
+	                <string>UIInterfaceOrientationLandscapeLeft</string>
+	                <string>UIInterfaceOrientationLandscapeRight</string>
+	            </array>
+	            <key>UIRequiresPersistentWiFi</key>
+	            <false/>
+	            <key>UIPrerenderedIcon</key>
+	            <false/>
+	            <key>UIStatusBarHidden</key>
+	            <false/>
+	            <key>UIStatusBarStyle</key>
+	            <string>UIStatusBarStyleDefault</string>
+	            <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	            <string>REPLACE.THIS--YOUR MESSAGE FOR 'Always' AND 'WhenInUse' PERMISSION</string>
+	            <key>NSLocationAlwaysUsageDescription</key>
+	            <string>REPLACE.THIS--YOUR MESSAGE FOR 'Always' PERMISSION</string>
+	            <key>NSLocationWhenInUseUsageDescription</key>
+	            <string>REPLACE.THIS--YOUR MESSAGE FOR 'WhenInUse' PERMISSION</string>
+	            <key>NearIT API Key</key>
+	            <string>REPLACE.THIS--Your.API.Key</string>
+	            <key>CFBundleURLTypes</key>
+	            <array>
+	                <dict>
+	                    <key>CFBundleTypeRole</key>
+	                    <string>Editor</string>
+	                    <key>CFBundleURLSchemes</key>
+	                    <array>
+	                        <string>REPLACE.THIS--Your.URL.Scheme</string>
+	                    </array>
+	                </dict>
+	            </array>
+	            <key>UIBackgroundModes</key>
+	            <array>
+	                <string>fetch</string>
+	            </array>
+	        </dict>
+	    </plist>
+	    <use-jscore-framework>true</use-jscore-framework>
+	</ios>
+    <android xmlns:android="http://schemas.android.com/apk/res/android"/>
     <modules>
-      <module platform="iphone">com.nearit.sdk.titanium</module>
+        <module platform="iphone">com.nearit.sdk.titanium</module>
     </modules>
     <deployment-targets>
-      <target device="android">false</target>
-      <target device="ipad">false</target>
-      <target device="iphone">true</target>
+        <target device="android">false</target>
+        <target device="ipad">false</target>
+        <target device="iphone">true</target>
     </deployment-targets>
-    <sdk-version>7.3.0.GA</sdk-version>
+    <sdk-version>7.4.1.GA</sdk-version>
     <property name="appc-app-id" type="string">5ba0bcafa666b4755ddd22cf</property>
-  </ti:app>
+</ti:app>

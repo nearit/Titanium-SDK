@@ -1,5 +1,5 @@
 //
-//  NITInboxItem.h
+//  NITHistoryItem.h
 //  NearITSDK
 //
 //  Created by francesco.leoni on 21/02/18.
@@ -11,7 +11,7 @@
 @class NITTrackingInfo;
 @class NITReactionBundle;
 
-@interface NITInboxItem : NSObject
+@interface NITHistoryItem : NSObject
 
 @property (nonatomic, strong) NITTrackingInfo* _Nonnull trackingInfo;
 @property (nonatomic, strong) NITReactionBundle* _Nonnull reactionBundle;
