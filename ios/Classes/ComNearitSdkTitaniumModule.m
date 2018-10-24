@@ -665,7 +665,25 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 }
 
 
+// MARK: Show NearIT contents
 
+- (void)showContentDialogWithContent:(NITContent * _Nonnull)content trackingInfo:(NITTrackingInfo * _Nonnull)trackingInfo
+{
+	NITContentViewController *vc = [[NITContentViewController alloc] initWithContent:content trackingInfo:trackingInfo];
+	[vc show];
+}
+
+- (void)showFeedbackDialogWithFeedback:(NITFeedback * _Nonnull)feedback
+{
+	NITFeedbackViewController *vc = [[NITFeedbackViewController alloc] initWithFeedback:feedback];
+	[vc show];
+}
+
+- (void)showCouponDialogWithCoupon:(NITCoupon * _Nonnull)coupon
+{
+	NITCouponViewController *vc = [[NITCouponViewController alloc] initWithCoupon:coupon];
+	[vc show];
+}
 #pragma NearIT Manager Delegate
 
 - (void)manager:(NITManager * _Nonnull)manager eventFailureWithError:(NSError * _Nonnull)error {
