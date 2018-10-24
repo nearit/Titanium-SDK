@@ -737,6 +737,29 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	[vc show];
 }
 
+- (void)showContent:(id)args
+{
+	NSDictionary *  arg = args[0];
+	NSString * eventType = [arg objectForKey:EVENT_TYPE];
+	NSDictionary * content = [arg objectForKey:EVENT_CONTENT];
+	NSString * bundledTrackingInfo = [arg objectForKey:EVENT_TRACKING_INFO];
+	NITTrackingInfo* trackingInfo = [self unbundleTrackingInfo:bundledTrackingInfo];
+	
+	NSLog(eventType);
+	
+	if ([eventType isEqualToString:EVENT_TYPE_CONTENT]) {
+		NITContent * nearContent = [self unbundleNITContent:content];
+		[self showContentDialogWithContent:nearContent trackingInfo:trackingInfo];
+	} else if ([eventType isEqualToString:EVENT_TYPE_FEEDBACK]) {
+		NITFeedback * feedback = [self unbundleNITFeedback:content];
+		[self showFeedbackDialogWithFeedback:feedback];
+	} else if ([eventType isEqualToString:EVENT_TYPE_COUPON]) {
+		NITCoupon * coupon = [self unbundleNITCoupon:content];
+		[self showCouponDialogWithCoupon:coupon];
+	}
+}
+
+
 // MARK: Show NearIT NotificationHistory
 
 - (void)showNotificationHistory:(id)unused
