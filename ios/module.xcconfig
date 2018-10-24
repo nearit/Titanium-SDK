@@ -16,5 +16,5 @@
 // Add the framework-search paths
 FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/com.nearit.sdk.titanium/$(TI_MODULE_VERSION)/platform "~/Library/Application Support/Titanium/modules/iphone/com.nearit.sdk.titanium/"$(TI_MODULE_VERSION)"/platform"
 
-// Link the Facebook SDK's to the app-target
-OTHER_LDFLAGS=$(inherited) -framework NearITSDK -framework UserNotifications
+// Link the NearIT frameworks to the app-target
+OTHER_LDFLAGS=$(inherited) -framework NearITSDK -framework NearUIBinding 
