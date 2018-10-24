@@ -684,6 +684,28 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	NITCouponViewController *vc = [[NITCouponViewController alloc] initWithCoupon:coupon];
 	[vc show];
 }
+
+// MARK: Show NearIT NotificationHistory
+
+- (void)showNotificationHistory:(id)unused
+{
+	ENSURE_UI_THREAD(showNotificationHistory, unused);
+	
+	NITNotificationHistoryViewController *historyVC = [[NITNotificationHistoryViewController alloc] init];
+	[historyVC show];
+}
+
+// MARK: Show NearIT Coupon List
+
+- (void)showCouponList:(id)unused
+{
+	ENSURE_UI_THREAD(showCouponList, unused);
+	
+	NITCouponListViewController *couponsVC = [[NITCouponListViewController alloc] init];
+	[couponsVC show];
+}
+
+
 #pragma NearIT Manager Delegate
 
 - (void)manager:(NITManager * _Nonnull)manager eventFailureWithError:(NSError * _Nonnull)error {
