@@ -195,6 +195,18 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 
 // MARK: INTERNAL contents handling
 
+- (NITCoupon*)unbundleNITCoupon:(NSDictionary* _Nonnull)bundledCoupon
+{
+	NITCoupon* coupon = [[NITCoupon alloc] init];
+	coupon.title = [bundledCoupon objectForKey:@"name"];
+	coupon.description = [bundledCoupon objectForKey:@"description"];
+	coupon.value = [bundledCoupon objectForKey:@"value"];
+	coupon.expiresAt = [bundledCoupon objectForKey:@"expiresAt"];
+	coupon.redeemabledFrom = [bundledCoupon objectForKey:@"redeemableFrom"];
+	coupon.icon = [self unbundleNITImage:[bundledCoupon objectForKey:@"image"]];
+	return coupon;
+}
+
 - (NSDictionary*)bundleNITCoupon:(NITCoupon* _Nonnull) coupon
 {
     NSMutableDictionary* couponDictionary = [[NSMutableDictionary alloc] init];
@@ -291,6 +303,16 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	return bundledSimple;
 }
 
+- (NITContent*)unbundleNITContent:(NSDictionary * _Nonnull)bundledContent
+{
+	NITContent* content = [[NITContent alloc] init];
+	content.title = [bundledContent objectForKey:EVENT_CONTENT_TITLE];
+	content.content = [bundledContent objectForKey:EVENT_CONTENT_TEXT];
+	content.image = [self unbundleNITImage: [bundledContent objectForKey:EVENT_CONTENT_IMAGE]];
+	content.cta = [self unbundleNITContentLink: [bundledContent objectForKey:EVENT_CONTENT_CTA]];
+	return content;
+}
+
 - (NSDictionary*)bundleNITContent:(NITContent * _Nonnull) content
 {
 	NSString* message = [content notificationMessage];
@@ -332,6 +354,17 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
   	return bundledContent;
 }
 
+- (NITFeedback*)unbundleNITFeedback:(NSDictionary * _Nonnull) bundledFeedback
+{
+	NSString* feedbackId = [bundledFeedback objectForKey:EVENT_CONTENT_FEEDBACK];
+    NSData* feedbackData = [[NSData alloc] initWithBase64EncodedString:feedbackId
+                                                               options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    
+    NITFeedback *feedback = [NSKeyedUnarchiver unarchiveObjectWithData:feedbackData];
+    feedback.question = [bundledFeedback objectForKey:EVENT_CONTENT_QUESTION];
+    return feedback;
+}
+
 - (NSDictionary*)bundleNITFeedback:(NITFeedback * _Nonnull) feedback
 {
 	NSString* message = [feedback notificationMessage];
@@ -364,7 +397,15 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	return customJson;
 }
 
-- (NSDictionary*)bundleNITImage:(NITImage* _Nonnull) image
+- (NITImage*)unbundleNITImage:(NSDictionary* _Nonnull)bundledImage
+{
+	NITImage* image = [[NITImage alloc] init];
+	image.url = [bundledImage objectForKey:@"fullSize"];
+	image.smallSizeURL = [bundledImage objectForKey:@"squareSize"];
+	return image;
+}
+
+- (NSDictionary*)bundleNITImage:(NITImage* _Nonnull)image
 {
     return @{
              @"fullSize": (image.url ? [image.url absoluteString] : [NSNull null]),
@@ -372,7 +413,16 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
              };
 }
 
-- (NSDictionary*)bundleNITContentLink:(NITContentLink* _Nonnull) cta {
+- (NITContentLink*)unbundleNITContentLink:(NSDictionary * _Nonnull)bundledLink
+{
+	NITContentLink* contentLink = [[NITContentLink alloc] init];
+	contentLink.label = [bundledLink objectForKey:@"label"];
+	contentLink.url = [bundledLink objectForKey:@"url"];
+	return contentLink;
+}
+
+- (NSDictionary*)bundleNITContentLink:(NITContentLink* _Nonnull)cta
+{
     return @{
              @"label": cta.label,
              @"url": [cta.url absoluteString]
