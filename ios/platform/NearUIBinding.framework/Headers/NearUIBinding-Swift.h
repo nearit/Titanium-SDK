@@ -289,7 +289,8 @@ SWIFT_CLASS("_TtC13NearUIBinding27NITCouponListViewController")
 - (nonnull instancetype)init;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)aDecoder OBJC_DESIGNATED_INITIALIZER;
 - (void)show;
-- (void)showFromViewController:(UIViewController * _Nullable)fromViewController;
+- (void)showWithTitle:(NSString * _Nullable)title;
+- (void)showFromViewController:(UIViewController * _Nullable)fromViewController title:(NSString * _Nullable)title;
 - (void)showWithNavigationController:(UINavigationController * _Nonnull)navigationController;
 - (void)showWithNavigationController:(UINavigationController * _Nonnull)navigationController title:(NSString * _Nullable)title;
 - (void)refreshList;
@@ -486,7 +487,8 @@ SWIFT_CLASS("_TtC13NearUIBinding36NITNotificationHistoryViewController")
 - (void)viewDidLoad;
 - (void)didReceiveMemoryWarning;
 - (void)show;
-- (void)showFromViewController:(UIViewController * _Nullable)fromViewController;
+- (void)showWithTitle:(NSString * _Nullable)title;
+- (void)showFromViewController:(UIViewController * _Nullable)fromViewController title:(NSString * _Nullable)title;
 - (void)showWithNavigationController:(UINavigationController * _Nonnull)navigationController;
 - (void)showWithNavigationController:(UINavigationController * _Nonnull)navigationController title:(NSString * _Nullable)title;
 - (void)refreshList;
