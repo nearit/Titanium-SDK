@@ -1,0 +1,4 @@
+framework module NearUIBinding {
+  header "NearUIBinding-Swift.h"
+  requires objc
+}

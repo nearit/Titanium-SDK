@@ -195,6 +195,17 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 
 // MARK: INTERNAL contents handling
 
+- (NITCoupon*)unbundleNITCoupon:(NSDictionary* _Nonnull)bundledCoupon
+{
+	NITCoupon* coupon = [[NITCoupon alloc] init];
+	coupon.couponDescription = [bundledCoupon objectForKey:@"description"];
+	coupon.value = [bundledCoupon objectForKey:@"value"];
+	coupon.expiresAt = [bundledCoupon objectForKey:@"expiresAt"];
+	coupon.redeemableFrom = [bundledCoupon objectForKey:@"redeemableFrom"];
+	coupon.icon = [self unbundleNITImage:[bundledCoupon objectForKey:@"image"]];
+	return coupon;
+}
+
 - (NSDictionary*)bundleNITCoupon:(NITCoupon* _Nonnull) coupon
 {
     NSMutableDictionary* couponDictionary = [[NSMutableDictionary alloc] init];
@@ -291,6 +302,16 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	return bundledSimple;
 }
 
+- (NITContent*)unbundleNITContent:(NSDictionary * _Nonnull)bundledContent
+{
+	NITContent* content = [[NITContent alloc] init];
+	content.title = [bundledContent objectForKey:EVENT_CONTENT_TITLE];
+	content.content = [bundledContent objectForKey:EVENT_CONTENT_TEXT];
+	content.images = @[[self unbundleNITImage: [bundledContent objectForKey:EVENT_CONTENT_IMAGE]]];
+	content.internalLink = [bundledContent objectForKey:EVENT_CONTENT_CTA];
+	return content;
+}
+
 - (NSDictionary*)bundleNITContent:(NITContent * _Nonnull) content
 {
 	NSString* message = [content notificationMessage];
@@ -332,6 +353,17 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
   	return bundledContent;
 }
 
+- (NITFeedback*)unbundleNITFeedback:(NSDictionary * _Nonnull) bundledFeedback
+{
+	NSString* feedbackId = [bundledFeedback objectForKey:EVENT_CONTENT_FEEDBACK];
+    NSData* feedbackData = [[NSData alloc] initWithBase64EncodedString:feedbackId
+                                                               options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    
+    NITFeedback *feedback = [NSKeyedUnarchiver unarchiveObjectWithData:feedbackData];
+    feedback.question = [bundledFeedback objectForKey:EVENT_CONTENT_QUESTION];
+    return feedback;
+}
+
 - (NSDictionary*)bundleNITFeedback:(NITFeedback * _Nonnull) feedback
 {
 	NSString* message = [feedback notificationMessage];
@@ -364,7 +396,17 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	return customJson;
 }
 
-- (NSDictionary*)bundleNITImage:(NITImage* _Nonnull) image
+- (NITImage*)unbundleNITImage:(NSDictionary* _Nonnull)bundledImage
+{
+	NITImage* image = [[NITImage alloc] init];
+	NSMutableDictionary* imageProperty = [[NSMutableDictionary alloc] init];
+	[imageProperty setObject:[bundledImage objectForKey:@"fullSize"] forKey:@"url"];
+	[imageProperty setObject:[bundledImage objectForKey:@"squareSize"] forKey:@"square_300"];
+	image.image = imageProperty;
+	return image;
+}
+
+- (NSDictionary*)bundleNITImage:(NITImage* _Nonnull)image
 {
     return @{
              @"fullSize": (image.url ? [image.url absoluteString] : [NSNull null]),
@@ -372,11 +414,21 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
              };
 }
 
-- (NSDictionary*)bundleNITContentLink:(NITContentLink* _Nonnull) cta {
+- (NSDictionary*)bundleNITContentLink:(NITContentLink* _Nonnull)cta
+{
     return @{
              @"label": cta.label,
              @"url": [cta.url absoluteString]
              };
+}
+
+- (NITTrackingInfo*)unbundleTrackingInfo:(NSString * _Nullable)bundledTrackingInfo
+{
+	NSData* trackingInfoData = [[NSData alloc] initWithBase64EncodedString:bundledTrackingInfo
+                                                                       options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        
+    NITTrackingInfo *trackingInfo = [NSKeyedUnarchiver unarchiveObjectWithData:trackingInfoData];
+    return trackingInfo;
 }
 
 - (NSString*)bundleTrackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
@@ -664,6 +716,69 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     [NITManager defaultManager].showForegroundNotification = false;
 }
 
+
+// MARK: Show NearIT contents
+
+- (void)showContentDialogWithContent:(NITContent * _Nonnull)content trackingInfo:(NITTrackingInfo * _Nonnull)trackingInfo
+{
+	NITContentViewController *vc = [[NITContentViewController alloc] initWithContent:content trackingInfo:trackingInfo];
+	[vc show];
+}
+
+- (void)showFeedbackDialogWithFeedback:(NITFeedback * _Nonnull)feedback
+{
+	NITFeedbackViewController *vc = [[NITFeedbackViewController alloc] initWithFeedback:feedback];
+	[vc show];
+}
+
+- (void)showCouponDialogWithCoupon:(NITCoupon * _Nonnull)coupon
+{
+	NITCouponViewController *vc = [[NITCouponViewController alloc] initWithCoupon:coupon];
+	[vc show];
+}
+
+- (void)showContent:(id)args
+{
+	NSDictionary *  arg = args[0];
+	NSString * eventType = [arg objectForKey:EVENT_TYPE];
+	NSDictionary * content = [arg objectForKey:EVENT_CONTENT];
+	NSString * bundledTrackingInfo = [arg objectForKey:EVENT_TRACKING_INFO];
+	NITTrackingInfo* trackingInfo = [self unbundleTrackingInfo:bundledTrackingInfo];
+	
+	NSLog(eventType);
+	
+	if ([eventType isEqualToString:EVENT_TYPE_CONTENT]) {
+		NITContent * nearContent = [self unbundleNITContent:content];
+		[self showContentDialogWithContent:nearContent trackingInfo:trackingInfo];
+	} else if ([eventType isEqualToString:EVENT_TYPE_FEEDBACK]) {
+		NITFeedback * feedback = [self unbundleNITFeedback:content];
+		[self showFeedbackDialogWithFeedback:feedback];
+	} else if ([eventType isEqualToString:EVENT_TYPE_COUPON]) {
+		NITCoupon * coupon = [self unbundleNITCoupon:content];
+		[self showCouponDialogWithCoupon:coupon];
+	}
+}
+
+
+// MARK: Show NearIT NotificationHistory
+
+- (void)showNotificationHistory:(id)unused
+{
+	ENSURE_UI_THREAD(showNotificationHistory, unused);
+	
+	NITNotificationHistoryViewController *historyVC = [[NITNotificationHistoryViewController alloc] init];
+	[historyVC show];
+}
+
+// MARK: Show NearIT Coupon List
+
+- (void)showCouponList:(id)unused
+{
+	ENSURE_UI_THREAD(showCouponList, unused);
+	
+	NITCouponListViewController *couponsVC = [[NITCouponListViewController alloc] init];
+	[couponsVC show];
+}
 
 
 #pragma NearIT Manager Delegate
