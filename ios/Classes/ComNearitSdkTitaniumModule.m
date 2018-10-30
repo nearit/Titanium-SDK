@@ -401,8 +401,12 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 {
 	NITImage* image = [[NITImage alloc] init];
 	NSMutableDictionary* imageProperty = [[NSMutableDictionary alloc] init];
-	[imageProperty setObject:[bundledImage objectForKey:@"fullSize"] forKey:@"url"];
-	[imageProperty setObject:[bundledImage objectForKey:@"squareSize"] forKey:@"square_300"];
+	if ([bundledImage objectForKey:@"url"]) {
+		[imageProperty setObject:[bundledImage objectForKey:@"fullSize"] forKey:@"url"];
+	}
+	if ([bundledImage objectForKey:@"square_300"]) {
+		[imageProperty setObject:[bundledImage objectForKey:@"squareSize"] forKey:@"square_300"];
+	}
 	image.image = imageProperty;
 	return image;
 }
