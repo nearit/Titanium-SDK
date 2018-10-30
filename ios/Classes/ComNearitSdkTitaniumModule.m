@@ -694,9 +694,9 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 
 // MARK: Configure Push Notifications
 
-- (void)setDeviceToken:(NSArray *) deviceToken
+- (void)setDeviceToken:(NSString *) deviceToken
 {
-	[[NITManager defaultManager] setDeviceTokenWithData:deviceToken[0]];
+	[[NITManager defaultManager] setDeviceTokenWithData:deviceToken];
 }
 
 - (void)didReceiveRemoteNotification:(NSDictionary *)userInfo
