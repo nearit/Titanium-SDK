@@ -8,7 +8,7 @@ Ti.API.info("module is => " + NearIT);
 Ti.Network.registerForPushNotifications({
 	success: function(token) {
 		// give us the token
-		NearIT.registerForPushNotifications(token.deviceToken);
+		NearIT.setDeviceToken(token.deviceToken);
 	},
 	error: function(e) {
 		console.log("registerForPushNotifications", e);
