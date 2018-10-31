@@ -15,7 +15,11 @@
 
 #define IS_EMPTY(v) (v == nil || [v length] <= 0)
 
-@implementation ComNearitSdkTitaniumModule
+@implementation ComNearitSdkTitaniumModule {
+    KrollCallback* permissionDialogClosedCallback;
+    KrollCallback* locationGrantedCallback;
+    KrollCallback* notificationGrantedCallback;
+}
 
 // Define Titanium constants
 MAKE_SYSTEM_STR(NEARIT_EVENTS, NEARIT_NATIVE_EVENTS_TOPIC)
@@ -180,6 +184,37 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 
 
 #pragma Public APIs
+
+// MARK: Request Permissions
+
+- (void)requestPermissions:(id)args
+{
+    ENSURE_SINGLE_ARG(args, NSDictionary);
+	ENSURE_UI_THREAD(requestPermissions, args);
+    permissionDialogClosedCallback = [args objectForKey:@"dialogClosed"];
+    NSString * explanation = [args objectForKey:@"explanation"];
+    //locationGrantedCallback = [args objectForKey:@"locationGranted"];
+    //notificationGrantedCallback = [args objectForKey:@"notificationGranted"];
+    [[ComNearitUI sharedInstance] showPermissionsDialogWithExplanation:explanation ? explanation : nil delegate:self];
+}
+
+- (void)requestNotificationPermission:(id)args
+{
+    ENSURE_SINGLE_ARG(args, NSDictionary)
+    ENSURE_UI_THREAD(requestNotificationPermission, args)
+    permissionDialogClosedCallback = [args objectForKey:@"dialogClosed"];
+    NSString * explanation = [args objectForKey:@"explanation"];
+    [[ComNearitUI sharedInstance] showNotificationsPermissionDialogWithExplanation:explanation ? explanation : nil delegate:self];
+}
+
+- (void)requestLocationPermission:(id)args
+{
+    ENSURE_SINGLE_ARG(args, NSDictionary)
+    ENSURE_UI_THREAD(requestLocationPermission, args)
+    permissionDialogClosedCallback = [args objectForKey:@"dialogClosed"];
+    NSString * explanation = [args objectForKey:@"explanation"];
+    [[ComNearitUI sharedInstance] showLocationPermissionDialogWithExplanation:explanation ? explanation : nil delegate:self];
+}
 
 // MARK: NearIT Radar
 
@@ -447,13 +482,13 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 	
 	if ([eventType isEqualToString:EVENT_TYPE_CONTENT]) {
 		NITContent * nearContent = [ComNearitUtils unbundleNITContent:content];
-		[ComNearitUI showContentDialogWithContent:nearContent trackingInfo:trackingInfo];
+		[[ComNearitUI sharedInstance] showContentDialogWithContent:nearContent trackingInfo:trackingInfo];
 	} else if ([eventType isEqualToString:EVENT_TYPE_FEEDBACK]) {
 		NITFeedback * feedback = [ComNearitUtils unbundleNITFeedback:content];
-		[ComNearitUI showFeedbackDialogWithFeedback:feedback];
+		[[ComNearitUI sharedInstance] showFeedbackDialogWithFeedback:feedback];
 	} else if ([eventType isEqualToString:EVENT_TYPE_COUPON]) {
 		NITCoupon * coupon = [ComNearitUtils unbundleNITCoupon:content];
-		[ComNearitUI showCouponDialogWithCoupon:coupon];
+		[[ComNearitUI sharedInstance] showCouponDialogWithCoupon:coupon];
 	}
 }
 
@@ -464,7 +499,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 {
 	ENSURE_UI_THREAD(showNotificationHistory, unused);
 	
-	[ComNearitUI showNotificationHistory];
+	[[ComNearitUI sharedInstance] showNotificationHistory];
 }
 
 // MARK: Show NearIT Coupon List
@@ -473,7 +508,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 {
 	ENSURE_UI_THREAD(showCouponList, unused);
 	
-	[ComNearitUI showCouponList];
+	[[ComNearitUI sharedInstance] showCouponList];
 }
 
 
@@ -515,4 +550,23 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     }];
 }
 
+#pragma NITPermissionsViewControllerDelegate
+
+- (void)dialogClosedWithLocationGranted:(BOOL)locationGranted notificationsGranted:(BOOL)notificationsGranted {
+    if (permissionDialogClosedCallback != nil) {
+        [permissionDialogClosedCallback call:@[ @{ @"location": [NSNumber numberWithBool:locationGranted], @"notifications": [NSNumber numberWithBool:notificationsGranted] } ] thisObject:nil];
+    }
+}
+
+- (void)locationGranted:(BOOL)granted {
+    if (locationGrantedCallback != nil) {
+        [locationGrantedCallback call:@[] thisObject:nil];
+    }
+}
+
+- (void)notificationsGranted:(BOOL)granted {
+    if (notificationGrantedCallback != nil) {
+        [notificationGrantedCallback call:@[] thisObject:nil];
+    }
+}
 @end
