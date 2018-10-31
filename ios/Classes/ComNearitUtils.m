@@ -61,7 +61,6 @@
 	
 	[historyDictionary setObject:read forKey:@"read"];
 	[historyDictionary setObject:timestamp forKey:@"timestamp"];
-	[historyDictionary setObject:(item.reactionBundle.notificationMessage) forKey:@"notificationMessage"];
 	[historyDictionary setObject:(bundledTrackingInfo ? bundledTrackingInfo : [NSNull null]) forKey:@"trackingInfo"];
 	
 	if ([item.reactionBundle isKindOfClass:[NITSimpleNotification class]]) {
