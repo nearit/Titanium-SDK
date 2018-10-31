@@ -8,11 +8,10 @@
 #import "TiModule.h"
 
 #import "NearITSDK.h"
+#import "ComNearitUI.h"
+#import "ComNearitUtils.h"
+#import "ComNearitConsts.h"
 
-#import <WebKit/WebKit.h>
-#import <CoreBluetooth/CoreBluetooth.h>
-#import <CoreLocation/CoreLocation.h>
-#import <NearUIBinding/NearUIBinding-Swift.h>
 #import <UserNotifications/UserNotifications.h>
 
 
