@@ -27,6 +27,12 @@
 		24DE9E1111C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DE9E0F11C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.h */; };
 		24DE9E1211C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.m */; };
 		380D24F8214A724200892B0C /* NearITSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 380D24F7214A724200892B0C /* NearITSDK.framework */; };
+		381ED5812189BA5100E6BD28 /* ComNearitConsts.m in Sources */ = {isa = PBXBuildFile; fileRef = 381ED57B2189BA5100E6BD28 /* ComNearitConsts.m */; };
+		381ED5822189BA5100E6BD28 /* ComNearitUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 381ED57C2189BA5100E6BD28 /* ComNearitUtils.h */; };
+		381ED5832189BA5100E6BD28 /* ComNearitUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 381ED57D2189BA5100E6BD28 /* ComNearitUtils.m */; };
+		381ED5842189BA5100E6BD28 /* ComNearitConsts.h in Headers */ = {isa = PBXBuildFile; fileRef = 381ED57E2189BA5100E6BD28 /* ComNearitConsts.h */; };
+		381ED5852189BA5100E6BD28 /* ComNearitUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 381ED57F2189BA5100E6BD28 /* ComNearitUI.h */; };
+		381ED5862189BA5100E6BD28 /* ComNearitUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 381ED5802189BA5100E6BD28 /* ComNearitUI.m */; };
 		38924237214C1777000BCB05 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38924236214C1777000BCB05 /* UserNotifications.framework */; };
 		AA747D9F0F9514B9006C5449 /* ComNearitSdkTitanium_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComNearitSdkTitanium_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
@@ -64,6 +70,12 @@
 		380ED0FF2150E58F00264CEC /* libhyperloop-ticore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libhyperloop-ticore.a"; path = "../../../../Library/Application Support/Titanium/modules/iphone/hyperloop/3.1.1/libhyperloop-ticore.a"; sourceTree = "<group>"; };
 		380ED1002150E59000264CEC /* libhyperloop.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libhyperloop.a; path = "../../../../Library/Application Support/Titanium/modules/iphone/hyperloop/3.1.1/libhyperloop.a"; sourceTree = "<group>"; };
 		380ED1012150E59000264CEC /* libhyperloop-jscore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libhyperloop-jscore.a"; path = "../../../../Library/Application Support/Titanium/modules/iphone/hyperloop/3.1.1/libhyperloop-jscore.a"; sourceTree = "<group>"; };
+		381ED57B2189BA5100E6BD28 /* ComNearitConsts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComNearitConsts.m; path = Classes/ComNearitConsts.m; sourceTree = "<group>"; };
+		381ED57C2189BA5100E6BD28 /* ComNearitUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComNearitUtils.h; path = Classes/ComNearitUtils.h; sourceTree = "<group>"; };
+		381ED57D2189BA5100E6BD28 /* ComNearitUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComNearitUtils.m; path = Classes/ComNearitUtils.m; sourceTree = "<group>"; };
+		381ED57E2189BA5100E6BD28 /* ComNearitConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComNearitConsts.h; path = Classes/ComNearitConsts.h; sourceTree = "<group>"; };
+		381ED57F2189BA5100E6BD28 /* ComNearitUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComNearitUI.h; path = Classes/ComNearitUI.h; sourceTree = "<group>"; };
+		381ED5802189BA5100E6BD28 /* ComNearitUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComNearitUI.m; path = Classes/ComNearitUI.m; sourceTree = "<group>"; };
 		383CD46A214828D300DD74D6 /* module.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = module.xcconfig; sourceTree = "<group>"; };
 		38924236214C1777000BCB05 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		AA747D9E0F9514B9006C5449 /* ComNearitSdkTitanium_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComNearitSdkTitanium_Prefix.pch; sourceTree = SOURCE_ROOT; };
@@ -120,6 +132,12 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				381ED57E2189BA5100E6BD28 /* ComNearitConsts.h */,
+				381ED57B2189BA5100E6BD28 /* ComNearitConsts.m */,
+				381ED57F2189BA5100E6BD28 /* ComNearitUI.h */,
+				381ED5802189BA5100E6BD28 /* ComNearitUI.m */,
+				381ED57C2189BA5100E6BD28 /* ComNearitUtils.h */,
+				381ED57D2189BA5100E6BD28 /* ComNearitUtils.m */,
 				24DE9E0F11C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.h */,
 				24DE9E1011C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.m */,
 				24DD6CF71134B3F500162E58 /* ComNearitSdkTitaniumModule.h */,
@@ -145,7 +163,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				381ED5842189BA5100E6BD28 /* ComNearitConsts.h in Headers */,
 				AA747D9F0F9514B9006C5449 /* ComNearitSdkTitanium_Prefix.pch in Headers */,
+				381ED5822189BA5100E6BD28 /* ComNearitUtils.h in Headers */,
+				381ED5852189BA5100E6BD28 /* ComNearitUI.h in Headers */,
 				24DD6CF91134B3F500162E58 /* ComNearitSdkTitaniumModule.h in Headers */,
 				24DE9E1111C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.h in Headers */,
 			);
@@ -222,7 +243,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				381ED5812189BA5100E6BD28 /* ComNearitConsts.m in Sources */,
+				381ED5862189BA5100E6BD28 /* ComNearitUI.m in Sources */,
 				24DD6CFA1134B3F500162E58 /* ComNearitSdkTitaniumModule.m in Sources */,
+				381ED5832189BA5100E6BD28 /* ComNearitUtils.m in Sources */,
 				24DE9E1211C5FE74003F90F6 /* ComNearitSdkTitaniumModuleAssets.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
