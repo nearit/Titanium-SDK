@@ -59,6 +59,10 @@
         }
     }
     
+    NSData* couponData = [NSKeyedArchiver archivedDataWithRootObject:coupon];
+    NSString* couponB64 = [couponData base64EncodedStringWithOptions:0];
+    [couponDictionary setObject:couponB64 forKey:@"couponData"];
+    
     return couponDictionary;
 }
 
