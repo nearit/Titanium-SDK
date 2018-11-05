@@ -487,7 +487,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 		NITFeedback * feedback = [ComNearitUtils unbundleNITFeedback:content];
 		[[ComNearitUI sharedInstance] showFeedbackDialogWithFeedback:feedback];
 	} else if ([eventType isEqualToString:EVENT_TYPE_COUPON]) {
-		NITCoupon * coupon = [ComNearitUtils unbundleNITCoupon:content];
+		NITCoupon * coupon = [ComNearitUtils unbundleNITCoupon:[content objectForKey:@"coupon"]];
 		[[ComNearitUI sharedInstance] showCouponDialogWithCoupon:coupon];
 	}
 }

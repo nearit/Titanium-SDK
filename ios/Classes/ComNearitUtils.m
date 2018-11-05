@@ -13,12 +13,10 @@
 
 - (NITCoupon*)unbundleNITCoupon:(NSDictionary* _Nonnull)bundledCoupon
 {
-	NITCoupon* coupon = [[NITCoupon alloc] init];
-	coupon.couponDescription = [bundledCoupon objectForKey:@"description"];
-	coupon.value = [bundledCoupon objectForKey:@"value"];
-	coupon.expiresAt = [bundledCoupon objectForKey:@"expiresAt"];
-	coupon.redeemableFrom = [bundledCoupon objectForKey:@"redeemableFrom"];
-	coupon.icon = [self unbundleNITImage:[bundledCoupon objectForKey:@"image"]];
+    NSString* couponString = [bundledCoupon objectForKey:@"couponData"];
+    NSData* couponData = [[NSData alloc] initWithBase64EncodedString:couponString
+                                                               options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NITCoupon *coupon = [NSKeyedUnarchiver unarchiveObjectWithData:couponData];
 	return coupon;
 }
 
@@ -40,6 +38,7 @@
         [couponDictionary setObject:(coupon.claims[0].serialNumber ? coupon.claims[0].serialNumber : [NSNull null]) forKey:@"serial"];
         [couponDictionary setObject:(coupon.claims[0].claimedAt ? coupon.claims[0].claimedAt : [NSNull null]) forKey:@"claimedAt"];
         [couponDictionary setObject:(coupon.claims[0].redeemedAt ? coupon.claims[0].redeemedAt : [NSNull null]) forKey:@"redeemedAt"];
+        [couponDictionary setObject:(coupon.claims[0].recipeId ? coupon.claims[0].recipeId : [NSNull null]) forKey:@"recipeId"];
     }
     
     if (coupon.icon) {
@@ -47,6 +46,10 @@
             [couponDictionary setObject:[self bundleNITImage:coupon.icon] forKey:@"image"];
         }
     }
+    
+    NSData* couponData = [NSKeyedArchiver archivedDataWithRootObject:coupon];
+    NSString* couponB64 = [couponData base64EncodedStringWithOptions:0];
+    [couponDictionary setObject:couponB64 forKey:@"couponData"];
     
     return couponDictionary;
 }
@@ -213,17 +216,21 @@
 
 - (NITImage*)unbundleNITImage:(NSDictionary* _Nonnull)bundledImage
 {
-	NITImage* image = [[NITImage alloc] init];
-	NSMutableDictionary* imageProperty = [[NSMutableDictionary alloc] init];
-	[imageProperty setObject:[bundledImage objectForKey:@"fullSize"] forKey:@"url"];
-	[imageProperty setObject:[bundledImage objectForKey:@"squareSize"] forKey:@"square_300"];
-	image.image = imageProperty;
+    NITImage* image = [[NITImage alloc] init];
+    if ([bundledImage objectForKey:@"imageData"]) {
+        NSData* imageData = [[NSData alloc] initWithBase64EncodedString:[bundledImage objectForKey:@"imageData"]
+                                                                options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        image = [NSKeyedUnarchiver unarchiveObjectWithData:imageData];
+    }
 	return image;
 }
 
 - (NSDictionary*)bundleNITImage:(NITImage* _Nonnull)image
 {
+    NSData* imageData = [NSKeyedArchiver archivedDataWithRootObject:image];
+    NSString* imageB64 = [imageData base64EncodedStringWithOptions:0];
     return @{
+             @"imageData": imageB64,
              @"fullSize": (image.url ? [image.url absoluteString] : [NSNull null]),
              @"squareSize": (image.smallSizeURL ? [image.smallSizeURL absoluteString] : [NSNull null])
              };
