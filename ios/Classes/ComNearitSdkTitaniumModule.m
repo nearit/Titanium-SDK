@@ -15,44 +15,11 @@
 
 #define IS_EMPTY(v) (v == nil || [v length] <= 0)
 
-NSString* const NEARIT_NATIVE_EVENTS_TOPIC = @"NearItEvent";
-// Local Events topic (used by NotificationCenter to handle incoming notifications)
-NSString* const NEARIT_LOCAL_EVENTS_TOPIC = @"NearItTitaniumLocalEvents";
-
-// Event types
-NSString* const EVENT_TYPE_SIMPLE = @"NearIt.Events.SimpleNotification";
-NSString* const EVENT_TYPE_CUSTOM_JSON = @"NearIt.Events.CustomJSON";
-NSString* const EVENT_TYPE_COUPON = @"NearIt.Events.Coupon";
-NSString* const EVENT_TYPE_CONTENT = @"NearIt.Events.Content";
-NSString* const EVENT_TYPE_FEEDBACK = @"NearIt.Events.Feedback";
-
-// Events content
-NSString* const EVENT_TYPE = @"contentType";
-NSString* const EVENT_TRACKING_INFO = @"trackingInfo";
-NSString* const EVENT_CONTENT = @"content";
-NSString* const EVENT_CONTENT_MESSAGE = @"message";
-NSString* const EVENT_CONTENT_DATA = @"data";
-NSString* const EVENT_CONTENT_COUPON = @"coupon";
-NSString* const EVENT_CONTENT_TEXT = @"text";
-NSString* const EVENT_CONTENT_TITLE = @"title";
-NSString* const EVENT_CONTENT_IMAGE = @"image";
-NSString* const EVENT_CONTENT_CTA = @"cta";
-NSString* const EVENT_CONTENT_CTA_LABEL = @"label";
-NSString* const EVENT_CONTENT_CTA_LINK = @"url";
-NSString* const EVENT_CONTENT_FEEDBACK = @"feedbackId";
-NSString* const EVENT_CONTENT_QUESTION = @"feedbackQuestion";
-NSString* const EVENT_STATUS = @"status";
-
-// Error codes
-NSString* const E_SEND_FEEDBACK_ERROR = @"E_SEND_FEEDBACK_ERROR";
-NSString* const E_USER_PROFILE_GET_ERROR = @"E_USER_PROFILE_GET_ERROR";
-NSString* const E_USER_PROFILE_SET_ERROR = @"E_USER_PROFILE_SET_ERROR";
-NSString* const E_USER_PROFILE_RESET_ERROR = @"E_USER_PROFILE_RESET_ERROR";
-NSString* const E_USER_PROFILE_CREATE_ERROR = @"E_USER_PROFILE_CREATE_ERROR";
-NSString* const E_USER_PROFILE_DATA_ERROR = @"E_USER_PROFILE_DATA_ERROR";
-NSString* const E_COUPONS_RETRIEVAL_ERROR = @"E_COUPONS_RETRIEVAL_ERROR";
-
-@implementation ComNearitSdkTitaniumModule
+@implementation ComNearitSdkTitaniumModule {
+    KrollCallback* permissionDialogClosedCallback;
+    KrollCallback* locationGrantedCallback;
+    KrollCallback* notificationGrantedCallback;
+}
 
 // Define Titanium constants
 MAKE_SYSTEM_STR(NEARIT_EVENTS, NEARIT_NATIVE_EVENTS_TOPIC)
@@ -130,7 +97,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Simple notification
         NITSimpleNotification *simple = (NITSimpleNotification*)content;
         
-        [self sendEventWithContent:[self bundleNITSimple:simple]
+        [self sendEventWithContent:[ComNearitUtils bundleNITSimple:simple]
                       NITEventType:EVENT_TYPE_SIMPLE
                       trackingInfo:trackingInfo];
         
@@ -139,7 +106,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Notification with Content
         NITContent *nearContent = (NITContent*)content;
         
-        [self sendEventWithContent:[self bundleNITContent:nearContent]
+        [self sendEventWithContent:[ComNearitUtils bundleNITContent:nearContent]
                       NITEventType:EVENT_TYPE_CONTENT
                       trackingInfo:trackingInfo];
         
@@ -149,7 +116,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Feedback
         NITFeedback* feedback = (NITFeedback*)content;
         
-        [self sendEventWithContent:[self bundleNITFeedback:feedback]
+        [self sendEventWithContent:[ComNearitUtils bundleNITFeedback:feedback]
                       NITEventType:EVENT_TYPE_FEEDBACK
                       trackingInfo:trackingInfo];
         
@@ -166,7 +133,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         
         NSDictionary* eventContent = @{
                                        EVENT_CONTENT_MESSAGE: message,
-                                       EVENT_CONTENT_COUPON: [self bundleNITCoupon:coupon]
+                                       EVENT_CONTENT_COUPON: [ComNearitUtils bundleNITCoupon:coupon]
                                        };
         
         [self sendEventWithContent:eventContent
@@ -179,7 +146,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         // Custom JSON notification
         NITCustomJSON *custom = (NITCustomJSON*)content;
         
-        [self sendEventWithContent:[self bundleNITCustomJSON:custom]
+        [self sendEventWithContent:[ComNearitUtils bundleNITCustomJSON:custom]
                       NITEventType:EVENT_TYPE_CUSTOM_JSON
                       trackingInfo:trackingInfo];
         
@@ -193,209 +160,13 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     }
 }
 
-// MARK: INTERNAL contents handling
-
-- (NSDictionary*)bundleNITCoupon:(NITCoupon* _Nonnull) coupon
-{
-    NSMutableDictionary* couponDictionary = [[NSMutableDictionary alloc] init];
-    [couponDictionary setObject:(coupon.title ? coupon.title : [NSNull null])
-                         forKey:@"name"];
-    [couponDictionary setObject:(coupon.couponDescription ? coupon.couponDescription : [NSNull null])
-                         forKey:@"description"];
-    [couponDictionary setObject:(coupon.value ? coupon.value : [NSNull null])
-                         forKey:@"value"];
-    [couponDictionary setObject:(coupon.expiresAt ? coupon.expiresAt : [NSNull null])
-                         forKey:@"expiresAt"];
-    [couponDictionary setObject:(coupon.redeemableFrom ? coupon.redeemableFrom : [NSNull null])
-                         forKey:@"redeemableFrom"];
-    
-    if (coupon.claims.count > 0) {
-        [couponDictionary setObject:(coupon.claims[0].serialNumber ? coupon.claims[0].serialNumber : [NSNull null]) forKey:@"serial"];
-        [couponDictionary setObject:(coupon.claims[0].claimedAt ? coupon.claims[0].claimedAt : [NSNull null]) forKey:@"claimedAt"];
-        [couponDictionary setObject:(coupon.claims[0].redeemedAt ? coupon.claims[0].redeemedAt : [NSNull null]) forKey:@"redeemedAt"];
-    }
-    
-    if (coupon.icon) {
-        if (coupon.icon.url || coupon.icon.smallSizeURL) {
-            [couponDictionary setObject:[self bundleNITImage:coupon.icon] forKey:@"image"];
-        }
-    }
-    
-    return couponDictionary;
-}
-
-- (NSDictionary*)bundleNITHistoryItem:(NITHistoryItem* _Nonnull) item
-{
-	NSMutableDictionary* historyDictionary = [[NSMutableDictionary alloc] init];
-	
-	NSNumber *read = [NSNumber numberWithBool:item.read];
-	NSNumber *timestamp = [NSNumber numberWithDouble:item.timestamp];
-	NSString *bundledTrackingInfo = [self bundleTrackingInfo:item.trackingInfo];
-	
-	[historyDictionary setObject:read forKey:@"read"];
-	[historyDictionary setObject:timestamp forKey:@"timestamp"];
-	[historyDictionary setObject:(item.reactionBundle.notificationMessage) forKey:@"notificationMessage"];
-	[historyDictionary setObject:(bundledTrackingInfo ? bundledTrackingInfo : [NSNull null]) forKey:@"trackingInfo"];
-	
-	if ([item.reactionBundle isKindOfClass:[NITSimpleNotification class]]) {
-	
-		[historyDictionary setObject:EVENT_TYPE_SIMPLE forKey:@"type"];
-		
-		NITSimpleNotification *nearSimple = (NITSimpleNotification*)item.reactionBundle;
-		NSDictionary* content = [self bundleNITSimple:nearSimple];
-		[historyDictionary setObject:content forKey:@"notificationContent"];
-		
-	} else if ([item.reactionBundle isKindOfClass:[NITContent class]]) {
-		
-		[historyDictionary setObject:EVENT_TYPE_CONTENT forKey:@"type"];
-		
-		NITContent *nearContent = (NITContent*)item.reactionBundle;
-		NSDictionary* content = [self bundleNITContent:nearContent];
-		[historyDictionary setObject:content forKey:@"notificationContent"];
-		
-	} else if ([item.reactionBundle isKindOfClass:[NITFeedback class]]) {
-	
-		[historyDictionary setObject:EVENT_TYPE_FEEDBACK forKey:@"type"];
-		
-		NITFeedback* nearFeedback = (NITFeedback*)item.reactionBundle;
-		NSDictionary* feedback = [self bundleNITFeedback:nearFeedback];
-		[historyDictionary setObject:feedback forKey:@"notificationContent"];
-		
-	} else if ([item.reactionBundle isKindOfClass:[NITCoupon class]]) {
-	
-		[historyDictionary setObject:EVENT_TYPE_COUPON forKey:@"type"];
-		
-		
-	} else if ([item.reactionBundle isKindOfClass:[NITCustomJSON class]]) {
-	
-		[historyDictionary setObject:EVENT_TYPE_CUSTOM_JSON forKey:@"type"];
-		
-		NITCustomJSON *nearCustom = (NITCustomJSON*)item.reactionBundle;
-		NSDictionary* custom = [self bundleNITCustomJSON:nearCustom];
-		[historyDictionary setObject:custom forKey:@"notificationContent"];
-	}
-	
-	return historyDictionary;
-}
-
-- (NSDictionary*)bundleNITSimple:(NITSimpleNotification * _Nonnull) simple
-{
-	NSString* message = [simple notificationMessage];
-    if (!message) {
-        message = @"";
-    }
-    
-    NSDictionary* bundledSimple = @{
-					EVENT_CONTENT_MESSAGE: message};
-	
-	return bundledSimple;
-}
-
-- (NSDictionary*)bundleNITContent:(NITContent * _Nonnull) content
-{
-	NSString* message = [content notificationMessage];
-    if (!message) {
-        message = @"";
-    }
-	
-	NSString* title = [content title];
-    if (!title) {
-        title = @"";
-    }
-    
-    NSString* text = [content content];
-    if (!text) {
-        text = @"";
-    }
-    
-    id image;
-    if (content.image) {
-        image = [self bundleNITImage:content.image];
-    } else {
-        image = [NSNull null];
-    }
-    
-    id cta;
-    if (content.link) {
-        cta = [self bundleNITContentLink:content.link];
-    } else {
-        cta = [NSNull null];
-    }
-    
-    NSDictionary* bundledContent = @{
-					EVENT_CONTENT_MESSAGE:message,
-					EVENT_CONTENT_TITLE:title,
-					EVENT_CONTENT_TEXT:text,
-					EVENT_CONTENT_IMAGE:image,
-					EVENT_CONTENT_CTA:cta};
-                                   
-  	return bundledContent;
-}
-
-- (NSDictionary*)bundleNITFeedback:(NITFeedback * _Nonnull) feedback
-{
-	NSString* message = [feedback notificationMessage];
-    if (!message) {
-        message = @"";
-    }
-    
-    NSData* feedbackData = [NSKeyedArchiver archivedDataWithRootObject:feedback];
-    NSString* feedbackB64 = [feedbackData base64EncodedStringWithOptions:0];
-    
-    NSDictionary* bundledFeedback = @{
-    					EVENT_CONTENT_MESSAGE: message,
-                    	EVENT_CONTENT_FEEDBACK: feedbackB64,
-                    	EVENT_CONTENT_QUESTION: [feedback question]};
-                    
-   	return bundledFeedback;
-}
-
-- (NSDictionary*)bundleNITCustomJSON:(NITCustomJSON* _Nonnull) custom
-{
-	NSString* message = [custom notificationMessage];
-    if (!message) {
-        message = @"";
-    }
-    
-    NSDictionary* customJson = @{
-                       EVENT_CONTENT_MESSAGE: message,
-                       EVENT_CONTENT_DATA: [custom content]};
-
-	return customJson;
-}
-
-- (NSDictionary*)bundleNITImage:(NITImage* _Nonnull) image
-{
-    return @{
-             @"fullSize": (image.url ? [image.url absoluteString] : [NSNull null]),
-             @"squareSize": (image.smallSizeURL ? [image.smallSizeURL absoluteString] : [NSNull null])
-             };
-}
-
-- (NSDictionary*)bundleNITContentLink:(NITContentLink* _Nonnull) cta {
-    return @{
-             @"label": cta.label,
-             @"url": [cta.url absoluteString]
-             };
-}
-
-- (NSString*)bundleTrackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
-{
-	NSString* trackingInfoB64;
-    if (trackingInfo) {
-        NSData* trackingInfoData = [NSKeyedArchiver archivedDataWithRootObject:trackingInfo];
-        trackingInfoB64 = [trackingInfoData base64EncodedStringWithOptions:0];
-    }
-    
-    return trackingInfoB64;
-}
 
 // MARK: INTERNAL NearIT content delivered through events
 
 - (void) sendEventWithContent:(NSDictionary* _Nonnull) content NITEventType:(NSString* _Nonnull) eventType trackingInfo:(NITTrackingInfo* _Nullable) trackingInfo
 {
     
-    NSString* bundledTrackingInfo = [self bundleTrackingInfo:trackingInfo];
+    NSString* bundledTrackingInfo = [ComNearitUtils bundleTrackingInfo:trackingInfo];
     
     NSDictionary* event = @{
                             EVENT_TYPE: eventType,
@@ -413,6 +184,37 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 
 
 #pragma Public APIs
+
+// MARK: Request Permissions
+
+- (void)requestPermissions:(id)args
+{
+    ENSURE_SINGLE_ARG(args, NSDictionary);
+	ENSURE_UI_THREAD(requestPermissions, args);
+    permissionDialogClosedCallback = [args objectForKey:@"dialogClosed"];
+    NSString * explanation = [args objectForKey:@"explanation"];
+    //locationGrantedCallback = [args objectForKey:@"locationGranted"];
+    //notificationGrantedCallback = [args objectForKey:@"notificationGranted"];
+    [[ComNearitUI sharedInstance] showPermissionsDialogWithExplanation:explanation ? explanation : nil delegate:self];
+}
+
+- (void)requestNotificationPermission:(id)args
+{
+    ENSURE_SINGLE_ARG(args, NSDictionary)
+    ENSURE_UI_THREAD(requestNotificationPermission, args)
+    permissionDialogClosedCallback = [args objectForKey:@"dialogClosed"];
+    NSString * explanation = [args objectForKey:@"explanation"];
+    [[ComNearitUI sharedInstance] showNotificationsPermissionDialogWithExplanation:explanation ? explanation : nil delegate:self];
+}
+
+- (void)requestLocationPermission:(id)args
+{
+    ENSURE_SINGLE_ARG(args, NSDictionary)
+    ENSURE_UI_THREAD(requestLocationPermission, args)
+    permissionDialogClosedCallback = [args objectForKey:@"dialogClosed"];
+    NSString * explanation = [args objectForKey:@"explanation"];
+    [[ComNearitUI sharedInstance] showLocationPermissionDialogWithExplanation:explanation ? explanation : nil delegate:self];
+}
 
 // MARK: NearIT Radar
 
@@ -440,7 +242,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
         if (!error) {
             if (successCallback) {
                 for(NITCoupon *c in coupons) {
-                    [bundledCoupons addObject:[self bundleNITCoupon:c]];
+                    [bundledCoupons addObject:[ComNearitUtils bundleNITCoupon:c]];
                 }
                 [successCallback call: @[@{ @"coupons" : bundledCoupons }] thisObject:nil];
             }
@@ -467,7 +269,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     		if (!error) {
     			if (successCallback) {
     				for (NITHistoryItem *item in items) {
-    					[bundledNotificationHistory addObject:[self bundleNITHistoryItem:item]];
+    					[bundledNotificationHistory addObject:[ComNearitUtils bundleNITHistoryItem:item]];
     				}
     				[successCallback call: @[@{ @"items" : bundledNotificationHistory }] thisObject:nil];
     			}
@@ -630,6 +432,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     [[NITManager defaultManager] setUserDataWithKey:key multiValue:values];
 }
 
+
 // MARK: NearIT in-app trigger
 
 - (void)triggerInAppEvent:(id)args
@@ -639,12 +442,11 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
 }
 
 
-
 // MARK: Configure Push Notifications
 
-- (void)registerForPushNotifications:(NSArray *) deviceToken
+- (void)setDeviceToken:(NSString *) deviceToken
 {
-    [[NITManager defaultManager] setDeviceTokenWithData:deviceToken[0]];
+	[[NITManager defaultManager] setDeviceTokenWithData:deviceToken];
 }
 
 - (void)didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -656,6 +458,7 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
                                                       userInfo:@{@"data": [userInfo objectForKey:@"data"]}];
 }
 
+
 // MARK: NearIT Customization
 
 + (void)disableDefaultRangingNotifications:(id)unused
@@ -664,6 +467,49 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     [NITManager defaultManager].showForegroundNotification = false;
 }
 
+
+// MARK: Show NearIT contents
+
+- (void)showContent:(id)args
+{
+	NSDictionary *  arg = args[0];
+	NSString * eventType = [arg objectForKey:EVENT_TYPE];
+	NSDictionary * content = [arg objectForKey:EVENT_CONTENT];
+	NSString * bundledTrackingInfo = [arg objectForKey:EVENT_TRACKING_INFO];
+	NITTrackingInfo* trackingInfo = [ComNearitUtils unbundleTrackingInfo:bundledTrackingInfo];
+	
+	NSLog(eventType);
+	
+	if ([eventType isEqualToString:EVENT_TYPE_CONTENT]) {
+		NITContent * nearContent = [ComNearitUtils unbundleNITContent:content];
+		[[ComNearitUI sharedInstance] showContentDialogWithContent:nearContent trackingInfo:trackingInfo];
+	} else if ([eventType isEqualToString:EVENT_TYPE_FEEDBACK]) {
+		NITFeedback * feedback = [ComNearitUtils unbundleNITFeedback:content];
+		[[ComNearitUI sharedInstance] showFeedbackDialogWithFeedback:feedback];
+	} else if ([eventType isEqualToString:EVENT_TYPE_COUPON]) {
+		NITCoupon * coupon = [ComNearitUtils unbundleNITCoupon:[content objectForKey:@"coupon"]];
+		[[ComNearitUI sharedInstance] showCouponDialogWithCoupon:coupon];
+	}
+}
+
+
+// MARK: Show NearIT NotificationHistory
+
+- (void)showNotificationHistory:(id)unused
+{
+	ENSURE_UI_THREAD(showNotificationHistory, unused);
+	
+	[[ComNearitUI sharedInstance] showNotificationHistory];
+}
+
+// MARK: Show NearIT Coupon List
+
+- (void)showCouponList:(id)unused
+{
+	ENSURE_UI_THREAD(showCouponList, unused);
+	
+	[[ComNearitUI sharedInstance] showCouponList];
+}
 
 
 #pragma NearIT Manager Delegate
@@ -704,4 +550,23 @@ MAKE_SYSTEM_STR(RECIPE_CTA_TAPPED, NITRecipeCtaTapped)
     }];
 }
 
+#pragma NITPermissionsViewControllerDelegate
+
+- (void)dialogClosedWithLocationGranted:(BOOL)locationGranted notificationsGranted:(BOOL)notificationsGranted {
+    if (permissionDialogClosedCallback != nil) {
+        [permissionDialogClosedCallback call:@[ @{ @"location": [NSNumber numberWithBool:locationGranted], @"notifications": [NSNumber numberWithBool:notificationsGranted] } ] thisObject:nil];
+    }
+}
+
+- (void)locationGranted:(BOOL)granted {
+    if (locationGrantedCallback != nil) {
+        [locationGrantedCallback call:@[] thisObject:nil];
+    }
+}
+
+- (void)notificationsGranted:(BOOL)granted {
+    if (notificationGrantedCallback != nil) {
+        [notificationGrantedCallback call:@[] thisObject:nil];
+    }
+}
 @end

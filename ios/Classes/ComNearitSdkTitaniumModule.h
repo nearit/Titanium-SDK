@@ -8,10 +8,14 @@
 #import "TiModule.h"
 
 #import "NearITSDK.h"
+#import "ComNearitUI.h"
+#import "ComNearitUtils.h"
+#import "ComNearitConsts.h"
+ 
 #import <UserNotifications/UserNotifications.h>
 
 
-@interface ComNearitSdkTitaniumModule : TiModule<NITManagerDelegate, UNUserNotificationCenterDelegate>
+@interface ComNearitSdkTitaniumModule : TiModule<NITManagerDelegate, UNUserNotificationCenterDelegate, NITPermissionsViewControllerDelegate>
 {
     
 }

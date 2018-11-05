@@ -9,6 +9,43 @@ var NearIT = require('com.nearit.sdk.titanium');
 
 
 /*
+ * Register for push notifications AFTER requesting Notification Permission
+ * - give NearIT plugin the push token
+ * - let NearIT plugin know when a push notification has been received
+ */
+Ti.Network.registerForPushNotifications({
+	success: function(token) {
+		// give us the token
+		NearIT.setDeviceToken(token.deviceToken);
+	},
+	error: function(e) {
+		console.log("registerForPushNotifications", e);
+	},
+	callback: function(pushNotification) {
+		// push received
+		console.log("push callback", pushNotification);
+		NearIT.didReceiveRemoteNotification(pushNotification);
+	}
+});
+
+/*
+ * Request permissions
+ */
+NearIT.requestPermissions({
+    	explanation: "Give me permissions",
+    	dialogClosed: function(result) {
+    		console.log("dialog closed");
+    		if (result.location) {
+    			console.log("location granted");	
+    			NearIT.startRadar();
+    		}
+    		if (result.notifications) {
+    			console.log("notifications granted");
+    		}
+    	}
+});
+
+/*
  * NearIT radar start/stop
  * WARNING: you should start radar only when the user already granted location permission
  */
@@ -29,6 +66,13 @@ NearIT.addEventListener(NearIT.NEARIT_EVENTS, function(event) {
 	var message = event.content.message;
 	var trackingInfo = event.trackingInfo;
 	var content = event.content;
+	
+	// Automagically show content
+	NearIT.showContent(event);
+	
+	// or..
+	
+	// Manually handle it
 	switch (event.contentType) {
 		case NearIT.SIMPLE:
 			// it's a simple notification with no content
