@@ -53,7 +53,11 @@ NearIT.addEventListener(NearIT.NEARIT_EVENTS, function(event) {
 		}
 	});
 	
-	switch (event.contentType) {
+	// AUTOMAGICALLY SHOW CONTENT
+	NearIT.showContent(event);
+	
+	// HANDLE CONTENT MANUALLY
+	/*switch (event.contentType) {
 		case NearIT.SIMPLE:
 			console.log("simple, message:", message);
 			break;
@@ -91,7 +95,7 @@ NearIT.addEventListener(NearIT.NEARIT_EVENTS, function(event) {
 			break;
 		default:
 			// Content type unrecognized
-	}
+	}*/
 });
 
 tabGroup.addTab(createTab1());
@@ -106,14 +110,8 @@ function createTab1() {
         title: "Main"
     });
     
-    var requestLocation = Ti.UI.createButton({
-    		title: "Location permission and start radar",
-    		color: '#fff',
-    		top: 90
-    });
-    
-    var requestNotif = Ti.UI.createButton({
-    		title: "Notification permission",
+    var requestPermissions = Ti.UI.createButton({
+    		title: "Request permission and start Radar",
     		color: '#fff',
     		top: 130
     });
@@ -154,12 +152,20 @@ function createTab1() {
     		top: 370
     });
     
-    requestLocation.addEventListener('click', handleLocationPermission);
-    
-    requestNotif.addEventListener('click', function() {
-    		// REQUEST NOTIFICATION PERMISSION
-    		Ti.App.iOS.registerUserNotificationSettings({
-    			types: [Ti.App.iOS.USER_NOTIFICATION_TYPE_ALERT, Ti.App.iOS.USER_NOTIFICATION_TYPE_BADGE , Ti.App.iOS.USER_NOTIFICATION_TYPE_SOUND]
+    requestPermissions.addEventListener('click', function() {
+    		// REQUEST PERMISSIONS AND START RADAR
+    		NearIT.requestPermissions({
+    			explanation: "Give me permissions",
+    			dialogClosed: function(result) {
+    				console.log("dialog closed");
+    				if (result.location) {
+    					console.log("location granted");	
+    					NearIT.startRadar();
+    				}
+    				if (result.notifications) {
+    					console.log("notifications granted");
+    				}
+    			}
     		});
     });
     
@@ -217,8 +223,7 @@ function createTab1() {
     		});
     });
 
-    win.add(requestLocation);
-    win.add(requestNotif);
+    win.add(requestPermissions);
     win.add(triggerSimple);
     win.add(triggerContent);
     win.add(triggerFeedback);
@@ -357,31 +362,6 @@ function createTabProfiling() {
     });
 
     return tab;
-}
-
-function handleLocationPermission() {
-	var hasAlwaysPermission = Ti.Geolocation.hasLocationPermissions(Ti.Geolocation.AUTHORIZATION_ALWAYS);
-	var hasWhenInUsePermission = Ti.Geolocation.hasLocationPermissions(Ti.Geolocation.AUTHORIZATION_WHEN_IN_USE);
-	var hasDeniedPermission = Ti.Geolocation.hasLocationPermissions(Ti.Geolocation.AUTHORIZATION_DENIED);
-	
-	if (hasAlwaysPermission) {
-		// Optimal place to call NearIT.startRadar()
-		NearIT.startRadar();
-	} else if (hasWhenInUsePermission) {
-		// Still a good place to call NearIT.startRadar()
-		NearIT.startRadar();
-	} else {
-		// Should ask for permission
-		Ti.Geolocation.requestLocationPermissions(Ti.Geolocation.AUTHORIZATION_ALWAYS, function(e) {
-			if (e.success) {
-				// OPTIMAL PLACE TO CALL NearIT.startRadar()
-				NearIT.startRadar();
-			} else {
-				// DO NOT start NearIT radar
-				console.log(e);
-			}
-		});
-	}
 }
 
 // added during app creation. this will automatically login to
