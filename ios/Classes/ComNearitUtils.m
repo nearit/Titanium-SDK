@@ -224,15 +224,12 @@
 
 - (NITImage*)unbundleNITImage:(NSDictionary* _Nonnull)bundledImage
 {
-	NITImage* image = [[NITImage alloc] init];
-	NSMutableDictionary* imageProperty = [[NSMutableDictionary alloc] init];
-    if ([bundledImage objectForKey:@"url"]) {
-        [imageProperty setObject:[bundledImage objectForKey:@"fullSize"] forKey:@"url"];
+    NITImage* image = [[NITImage alloc] init];
+    if ([bundledImage objectForKey:@"imageData"]) {
+        NSData* imageData = [[NSData alloc] initWithBase64EncodedString:[bundledImage objectForKey:@"imageData"]
+                                                                options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        image = [NSKeyedUnarchiver unarchiveObjectWithData:imageData];
     }
-    if ([bundledImage objectForKey:@"square_300"]) {
-        [imageProperty setObject:[bundledImage objectForKey:@"squareSize"] forKey:@"square_300"];
-    }
-	image.image = imageProperty;
 	return image;
 }
 
