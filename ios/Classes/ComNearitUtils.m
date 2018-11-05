@@ -238,7 +238,10 @@
 
 - (NSDictionary*)bundleNITImage:(NITImage* _Nonnull)image
 {
+    NSData* imageData = [NSKeyedArchiver archivedDataWithRootObject:image];
+    NSString* imageB64 = [imageData base64EncodedStringWithOptions:0];
     return @{
+             @"imageData": imageB64,
              @"fullSize": (image.url ? [image.url absoluteString] : [NSNull null]),
              @"squareSize": (image.smallSizeURL ? [image.smallSizeURL absoluteString] : [NSNull null])
              };
