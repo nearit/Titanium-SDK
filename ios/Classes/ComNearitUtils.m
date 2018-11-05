@@ -13,22 +13,10 @@
 
 - (NITCoupon*)unbundleNITCoupon:(NSDictionary* _Nonnull)bundledCoupon
 {
-	NITCoupon* coupon = [[NITCoupon alloc] init];
-	coupon.couponDescription = [bundledCoupon objectForKey:@"description"];
-	coupon.value = [bundledCoupon objectForKey:@"value"];
-	coupon.expiresAt = [bundledCoupon objectForKey:@"expiresAt"];
-	coupon.redeemableFrom = [bundledCoupon objectForKey:@"redeemableFrom"];
-	coupon.icon = [self unbundleNITImage:[bundledCoupon objectForKey:@"image"]];
-    NSMutableArray* claimsArray = [NSMutableArray array];
-    NITClaim* claim = [[NITClaim alloc] init];
-    claim.serialNumber = [bundledCoupon objectForKey:@"serial"];
-    claim.claimedAt = [bundledCoupon objectForKey:@"claimedAt"];
-    claim.redeemedAt = [bundledCoupon objectForKey:@"redeemedAt"];
-    claim.recipeId = [bundledCoupon objectForKey:@"recipeId"];
-    claim.coupon = coupon;
-    [claimsArray addObject:claim];
-    NSArray* claims = [NSArray arrayWithArray:claimsArray];
-    coupon.claims = claims;
+    NSString* couponString = [bundledCoupon objectForKey:@"couponData"];
+    NSData* couponData = [[NSData alloc] initWithBase64EncodedString:couponString
+                                                               options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NITCoupon *coupon = [NSKeyedUnarchiver unarchiveObjectWithData:couponData];
 	return coupon;
 }
 
