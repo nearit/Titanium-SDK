@@ -1,3 +1,17 @@
+1.2.0-rc1 - 11-05-2018
+
+Features:
+* Added UIs for coupon list, notification history and single NearIT content.
+* Added UIs for permissions request
+
+Enhancements:
+* better (un)bundling of NearIT contents
+
+Known issues:
+* With Titanium SDK < 7.3.0 some features won't work. There is no way to avoid this, please consider upgrading Titanium SDK.
+
+_____________________________________________
+
 1.1.0-rc1 - 10-23-2018
 
 Features:
